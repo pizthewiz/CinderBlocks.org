@@ -1,0 +1,13 @@
+{
+  "name": "cinderblock-intern",
+  "version" : "0.1.0-pre",
+  "description" : "Crawl GitHub in search of CinderBlocks",
+  "dependencies": {
+    "request": "*",
+    "cheerio": "*"
+  },
+  "engines": {
+  	"node": "0.10.x"
+  },
+  "private": true
+}
