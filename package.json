@@ -4,7 +4,8 @@
   "description" : "Crawl GitHub in search of CinderBlocks",
   "dependencies": {
     "request": "*",
-    "cheerio": "*"
+    "cheerio": "*",
+    "octonode": "*"
   },
   "engines": {
   	"node": "0.10.x"
