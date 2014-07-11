@@ -24,7 +24,7 @@ AWS.config.update({region: 'us-west-1'});
 var options = {
   params: {
     Bucket: 'cinderblocks.org',
-    Key: 'blocks.json',
+    Key: 'data/blocks.json',
     ACL: 'public-read',
     ContentEncoding: 'gzip',
     ContentType: 'application/json'
