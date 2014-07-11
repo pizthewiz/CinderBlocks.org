@@ -6,7 +6,7 @@
 //
 
 var fs = require('fs');
-var path = require('path');
+var zlib = require('zlib');
 var util = require('util');
 
 var async = require('async');
@@ -85,7 +85,6 @@ function hasImage(fullName, branch, callback) {
 }
 
 var main = function () {
-
   function findRepos(cb) {
     // find repos
     var repos = [];
@@ -110,7 +109,7 @@ var main = function () {
   }
 
   function _readRepos(cb) {
-    fs.readFile('./repos.json', function (err, data) {
+    fs.readFile('./_repos.json', function (err, data) {
       if (err) {
         cb(err);
         return;
@@ -126,19 +125,47 @@ var main = function () {
     cb(null, repos);
   }
 
-  function blockDescriptions(repos, cb) {
+  function getBlocks(repos, cb) {
     async.mapLimit(repos, 1, getBlock, function (err, results) {
       cb(err, results);
     });
   }
 
-  async.seq(_readRepos, _trimRepos, blockDescriptions)(function (err, blocks) {
+  function _readBlocks(cb) {
+    fs.readFile('./_blocks.json', function (err, data) {
+      if (err) {
+        cb(err);
+        return;
+      }
+
+      var blocks = JSON.parse(data);
+      cb(null, blocks);
+    });
+  }
+
+  function gzipBlocks(blocks, cb) {
+    zlib.gzip(JSON.stringify(blocks), function (err, data) {
+      cb(err, data);
+    });
+  }
+
+  function _saveLocally(data, cb) {
+    if (!Buffer.isBuffer(data)) {
+      data = JSON.stringify(data);
+    }
+
+    fs.writeFile('./blocks.json', data, function (err) {
+      cb(err, data);
+    });
+  }
+
+  async.seq(_readBlocks, gzipBlocks, _saveLocally)(function (err, data) {
     if (err) {
       console.error('ERROR - ', err);
       return;
     }
 
-    console.log(blocks);
+    console.log('saved blocks');
   });
 };
 
