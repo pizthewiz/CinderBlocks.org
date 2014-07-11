@@ -1,12 +1,20 @@
 {
-  "name": "cinderblock-intern",
+  "name": "intern",
   "version" : "0.1.0-pre",
   "description" : "Crawl GitHub in search of CinderBlocks",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pizthewiz/CinderBlocks.org.git"
+  },
+  "scripts": {
+    "start": "node inter.js"
+  },
   "dependencies": {
-    "request": "*",
+    "async": "*",
+    "aws-sdk": "*",
     "cheerio": "*",
     "octonode": "*",
-    "async": "*"
+    "request": "*"
   },
   "engines": {
   	"node": "0.10.x"

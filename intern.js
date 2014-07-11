@@ -13,15 +13,19 @@ var async = require('async');
 var request = require('request');
 var cheerio = require('cheerio');
 var github = require('octonode');
+var AWS = require('aws-sdk');
 
 var client = github.client({
   id: process.env.GITHUB_ID,
   secret: process.env.GITHUB_SECRET
 });
 
-// NB - global search not yet available via API, scrape in the interim. 😁
+AWS.config.update({region: 'us-west-1'});
+var bucket = new AWS.S3({ params: {Bucket: 'cinderblocks.org'} });
+
+// NB - scrape until global search is available via API 😁
 //  https://developer.github.com/changes/2013-10-18-new-code-search-requirements/
-function findBlocksOnPage(page, callback) {
+function findReposOnPage(page, callback) {
   var url = util.format("https://github.com/search?p=%s&q=cinder+path%3A%2Fcinderblock.xml&type=Code", page);
   request.get(url, {}, function (err, res, body) {
     if (err) {
@@ -93,7 +97,7 @@ var main = function () {
     async.whilst(function () {
       return status;
     }, function (callback) {
-      findBlocksOnPage(page++, function (err, data) {
+      findReposOnPage(page++, function (err, data) {
         if (err) {
           callback(err);
           return;
@@ -159,7 +163,20 @@ var main = function () {
     });
   }
 
-  async.seq(_readBlocks, gzipBlocks, _saveLocally)(function (err, data) {
+  function saveBlocks(data, cb) {
+    var params = {
+      Key: 'blocks.json',
+      Body: data,
+      ACL: 'public-read',
+      ContentEncoding: 'gzip',
+      ContentType: 'application/json'
+    };
+    bucket.putObject(params, function (err) {
+      cb(err, data);
+    });
+  }
+
+  async.seq(_readBlocks, gzipBlocks, saveBlocks)(function (err, data) {
     if (err) {
       console.error('ERROR - ', err);
       return;
