@@ -21,7 +21,21 @@ var client = github.client({
 });
 
 AWS.config.update({region: 'us-west-1'});
-var bucket = new AWS.S3({ params: {Bucket: 'cinderblocks.org'} });
+var options = {
+  params: {
+    Bucket: 'cinderblocks.org',
+    Key: 'blocks.json',
+    ACL: 'public-read',
+    ContentEncoding: 'gzip',
+    ContentType: 'application/json'
+  }
+};
+var bucket = new AWS.S3(options);
+
+// HTTP TRAFFIC:
+//  <PAGES + 1> GET to api.github.com
+//  <REPOS> GET to api.github.com
+//  <1> PUT to AWS S3
 
 // NB - scrape until global search is available via API 😁
 //  https://developer.github.com/changes/2013-10-18-new-code-search-requirements/
@@ -90,7 +104,6 @@ function hasImage(fullName, branch, callback) {
 
 var main = function () {
   function findRepos(cb) {
-    // find repos
     var repos = [];
     var status = true;
     var page = 1;
@@ -130,7 +143,7 @@ var main = function () {
   }
 
   function getBlocks(repos, cb) {
-    async.mapLimit(repos, 1, getBlock, function (err, results) {
+    async.mapLimit(repos, 4, getBlock, function (err, results) {
       cb(err, results);
     });
   }
@@ -164,19 +177,12 @@ var main = function () {
   }
 
   function saveBlocks(data, cb) {
-    var params = {
-      Key: 'blocks.json',
-      Body: data,
-      ACL: 'public-read',
-      ContentEncoding: 'gzip',
-      ContentType: 'application/json'
-    };
-    bucket.putObject(params, function (err) {
+    bucket.putObject({Body: data}, function (err) {
       cb(err, data);
     });
   }
 
-  async.seq(_readBlocks, gzipBlocks, saveBlocks)(function (err, data) {
+  async.seq(findRepos, getBlocks, gzipBlocks, saveBlocks)(function (err, data) {
     if (err) {
       console.error('ERROR - ', err);
       return;
