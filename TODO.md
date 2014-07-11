@@ -1,4 +1,11 @@
 
 ### INTERN
-- limit blocks.json access to cinderblocks.org
 - timing and status logging, something curses and color would be nice
+- add function to set bucket policy
+- reorganize into a module
+
+### WEB
+- script/task to upload gzipped web contents to S3
+
+### GENERAL
+- set bucket policy referrer check

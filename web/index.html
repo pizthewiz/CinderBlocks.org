@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>CinderBlocks</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="normalize.css">
+    <style>
+      body {
+        margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>CinderBlocks</h3>
+    <ol id="blocks">
+    </ol>
+
+    <script>
+      var blocks = [];
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'data/blocks.json', true);
+      xhr.onload = function(e) {
+        blocks = JSON.parse(this.response);
+        blocks.forEach(function (element) {
+          // add simple list item
+          var li = document.createElement('li');
+          var a = document.createElement('a');
+          a.href = element.url;
+//          a.innerText = element.full_name;
+          a.textContent = element.full_name;
+          li.appendChild(a);
+          document.getElementById('blocks').appendChild(li);
+        });
+      };
+      xhr.send();
+    </script>
+  </body>
+</html>
