@@ -19,8 +19,6 @@ var client = github.client({
   secret: process.env.GITHUB_SECRET
 });
 
-// flow: find block repos (SCRAPE) -=> get repo info (API) -=> save to S3 as blocks.json
-
 // NB - global search not yet available via API, scrape in the interim. 😁
 //  https://developer.github.com/changes/2013-10-18-new-code-search-requirements/
 function findBlocksOnPage(page, callback) {
@@ -48,8 +46,8 @@ function findBlocksOnPage(page, callback) {
   });  
 }
 
-function getBlock(full_name, callback) {
-  client.repo(full_name).info(function (err, data, headers) {
+function getBlock(fullName, callback) {
+  client.repo(fullName).info(function (err, data, headers) {
     if (err) {
       callback(err);
       return;
@@ -78,57 +76,70 @@ function getBlock(full_name, callback) {
   });  
 }
 
-function hasImage(name, callback) {
-  // TODO - use data.default_branch from client.repo(fullname).info()
-  var url = util.format("https://raw.githubusercontent.com/%s/master/cinderblock.png", name);
+function hasImage(fullName, branch, callback) {
+  // TODO - use data.default_branch from client.repo(fullName).info()
+  var url = util.format("https://raw.githubusercontent.com/%s/%s/cinderblock.png", fullName, branch);
   request.head(url, {}, function (err, res, body) {
     callback(err, res.statusCode === 200);
   });
 }
 
 var main = function () {
-  var repos = [];
-  var status = true;
-  var page = 1;
-  async.whilst(function () {
-    return status;
-  }, function (callback) {
-    findBlocksOnPage(page++, function (err, data) {
+
+  function findRepos(cb) {
+    // find repos
+    var repos = [];
+    var status = true;
+    var page = 1;
+    async.whilst(function () {
+      return status;
+    }, function (callback) {
+      findBlocksOnPage(page++, function (err, data) {
+        if (err) {
+          callback(err);
+          return;
+        }
+
+        repos = repos.concat(data);
+        status = data.length > 0;
+        callback();
+      });
+    }, function (err) {
+      cb(err, repos);
+    });
+  }
+
+  function _readRepos(cb) {
+    fs.readFile('./repos.json', function (err, data) {
       if (err) {
-        callback(err);
+        cb(err);
         return;
       }
 
-      repos = repos.concat(data);
-      status = data.length > 0;
-      callback();
+      var repos = JSON.parse(data);
+      cb(null, repos);
     });
-  }, function (err) {
+  }
+
+  function _trimRepos(repos, cb) {
+    repos = repos.slice(0, 4);
+    cb(null, repos);
+  }
+
+  function blockDescriptions(repos, cb) {
+    async.mapLimit(repos, 1, getBlock, function (err, results) {
+      cb(err, results);
+    });
+  }
+
+  async.seq(_readRepos, _trimRepos, blockDescriptions)(function (err, blocks) {
     if (err) {
       console.error('ERROR - ', err);
       return;
     }
 
-    console.log("found %d block repos", repos.length);
-  });
-  return;
-
-/*
-  // skip scraper during development and use saved results
-  var repos = JSON.parse(fs.readFileSync('./repos.json'));
-  repos = repos.slice(0, 3);
-
-  var blocks = [];
-  async.mapLimit(repos, 1, getBlock, function (err, results) {
-    if (err) {
-      console.error('ERROR - ', err);
-      return;
-    }
-  
-    blocks = results;
     console.log(blocks);
   });
-*/
 };
 
 if (require.main === module) {
