@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" ng-app>
   <head>
     <meta charset="utf-8">
     <title>CinderBlocks</title>
@@ -11,31 +11,30 @@
         margin: 10px;
       }
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.14/angular.min.js"></script>
   </head>
   <body>
     <h3>CinderBlocks</h3>
-    <ol id="blocks">
-    </ol>
+    <div ng-controller="BlockCtrl">
+      <ul id="block-list">
+        <li ng-repeat="block in blocks | orderBy : orderProp : true">
+          <a href="{{block.url}}">{{block.full_name}}</a>
+        </li>
+      </ul>
+    </div>
 
     <script>
-      var blocks = [];
+      function BlockCtrl ($scope, $http) {
+        $scope.blocks = [];
+        $scope.orderProp = 'created';
 
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', 'data/blocks.json', true);
-      xhr.onload = function(e) {
-        blocks = JSON.parse(this.response);
-        blocks.forEach(function (element) {
-          // add simple list item
-          var li = document.createElement('li');
-          var a = document.createElement('a');
-          a.href = element.url;
-//          a.innerText = element.full_name;
-          a.textContent = element.full_name;
-          li.appendChild(a);
-          document.getElementById('blocks').appendChild(li);
-        });
-      };
-      xhr.send();
+        $http({method: 'GET', url: 'http://cinderblocks.org/data/blocks.json'}).
+          success(function(data, status, headers, config) {
+            $scope.blocks = data;
+          }).error(function(data, status, headers, config) {
+            // TODO - something
+          });
+      }
     </script>
   </body>
 </html>
