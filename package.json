@@ -1,13 +1,10 @@
 {
   "name": "intern",
-  "version" : "0.1.0-pre",
-  "description" : "Crawl GitHub in search of CinderBlocks",
+  "version": "0.1.0-pre",
+  "description": "Crawl GitHub in search of CinderBlocks",
   "repository": {
     "type": "git",
     "url": "https://github.com/pizthewiz/CinderBlocks.org.git"
-  },
-  "scripts": {
-    "start": "node inter.js"
   },
   "dependencies": {
     "async": "*",
@@ -16,8 +13,12 @@
     "octonode": "*",
     "request": "*"
   },
+  "devDependencies": {
+    "gulp": "^3.8.6",
+    "gulp-awspublish": "0.0.18"
+  }
   "engines": {
-  	"node": "0.10.x"
+    "node": "0.10.x"
   },
-  "private": true
+  "private": true,
 }

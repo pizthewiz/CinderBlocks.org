@@ -1,17 +1,30 @@
 
 ### INTERN
-- timing and status logging, something curses and color would be nice
-- add function to set bucket policy
 - reorganize into a module
+- use gulp to generate and upload blocks.json
+- timing and status logging, something curses and color would be nice
+- check for cinderblock.png, record presence
+- check for and record sample count
+- read cinderblock.xml, record supported, template count, url, library, summary
 - do something with forks
+- add function to set bucket policy
 
 ### WEB
-- script/task to upload gzipped web contents to S3
-- single-page [AngularJS](https://angularjs.org/) app
-- use [PourOver](http://nytimes.github.io/pourover/) to sort blocks
-- add a simple about page with colophon
+- basic info layout
+- add a simple about page with colophon and basic cinderblock info
 - add an error page
+- some analytics: [MixPanel's Partner Plan](https://mixpanel.com/free/) or [Amplitude](https://amplitude.com)?
+- draw block image into canvas to scale/center
+- create default block image, cycle through colors
+- filter by: OS, samples
+- sort by: stars, created, updated
+- add a favicon
 
 ### GENERAL
+- use [gulp](http://gulpjs.com) for task launching?
 - set [S3 bucket policy](https://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html) referrer check
 - periodically run intern on [Heroku](https://www.heroku.com/) or [nodejitsu](https://www.nodejitsu.com/)
+
+### LATER
+- consider [PourOver](http://nytimes.github.io/pourover/) for block sorting and filtering
+- consider persistant blocks_metadata.json for key-value metadata store
