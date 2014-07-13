@@ -1,7 +1,6 @@
 /* TEAM */
-  Jean-Pierre Mouilleseaux
   Site: https://github.com/pizthewiz
-  Twitter: pizthewiz
+  Twitter: @pizthewiz
   Location: San Francisco, CA
 
 /* GREETZ */

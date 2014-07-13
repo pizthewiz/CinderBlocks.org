@@ -22,14 +22,13 @@
         </li>
       </ul>
     </div>
-
     <script>
       function BlockCtrl ($scope, $http) {
         $scope.blocks = [];
         $scope.orderProp = 'created';
 
-        $http({method: 'GET', url: 'http://cinderblocks.org/data/blocks.json'}).
-          success(function(data, status, headers, config) {
+        $http({method: 'GET', url: 'http://cinderblocks.org/data/blocks.json'})
+          .success(function(data, status, headers, config) {
             $scope.blocks = data;
           }).error(function(data, status, headers, config) {
             // TODO - something
