@@ -1,0 +1,12 @@
+/* TEAM */
+  Jean-Pierre Mouilleseaux
+  Site: https://github.com/pizthewiz
+  Twitter: pizthewiz
+  Location: San Francisco, CA
+
+/* GREETZ */
+  The Cinder team, contributors and community.
+
+/* SITE */
+  Standards: HTML5, CSS3, ECMAScript 5
+  Components: AngularJS, normalize.css
