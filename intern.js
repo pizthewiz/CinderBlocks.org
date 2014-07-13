@@ -1,41 +1,30 @@
-/*jshint node:true, strict:false */
-
-//
-//  Created by Jean-Pierre Mouilleseaux on 09 Jul 2014.
-//  Copyright 2014 Chorded Constructions. All rights reserved.
-//
+/*jshint node:true, strict:true */
+'use strict';
 
 var fs = require('fs');
-var zlib = require('zlib');
 var util = require('util');
 
 var async = require('async');
 var request = require('request');
 var cheerio = require('cheerio');
 var github = require('octonode');
-var AWS = require('aws-sdk');
 
 var client = github.client({
   id: process.env.GITHUB_ID,
   secret: process.env.GITHUB_SECRET
 });
 
-AWS.config.update({region: 'us-west-1'});
-var options = {
-  params: {
-    Bucket: 'cinderblocks.org',
-    Key: 'data/blocks.json',
-    ACL: 'public-read',
-    ContentEncoding: 'gzip',
-    ContentType: 'application/json'
-  }
-};
-var bucket = new AWS.S3(options);
+module.exports.generate = generate;
 
 // HTTP TRAFFIC:
 //  <PAGES + 1> GET to api.github.com
 //  <REPOS> GET to api.github.com
 //  <1> PUT to AWS S3
+function generate (cb) {
+  async.seq(findRepos, getBlocks, _saveBlocks)(function (err, data) {
+    cb(err, data);
+  });
+}
 
 // NB - scrape until global search is available via API 😁
 //  https://developer.github.com/changes/2013-10-18-new-code-search-requirements/
@@ -65,6 +54,11 @@ function findReposOnPage(page, callback) {
 }
 
 function getBlock(fullName, callback) {
+//  if (!client.id || !client.secret) {
+//  	callback({msg: 'Must define GITHUB_ID and GITHUB_SECRET environment variables'});
+//    return;
+//  }
+
   client.repo(fullName).info(function (err, data, headers) {
     if (err) {
       callback(err);
@@ -102,96 +96,72 @@ function hasImage(fullName, branch, callback) {
   });
 }
 
-var main = function () {
-  function findRepos(cb) {
-    var repos = [];
-    var status = true;
-    var page = 1;
-    async.whilst(function () {
-      return status;
-    }, function (callback) {
-      findReposOnPage(page++, function (err, data) {
-        if (err) {
-          callback(err);
-          return;
-        }
-
-        repos = repos.concat(data);
-        status = data.length > 0;
-        callback();
-      });
-    }, function (err) {
-      cb(err, repos);
-    });
-  }
-
-  function _readRepos(cb) {
-    fs.readFile('./_repos.json', function (err, data) {
+// wrappers
+function findRepos(cb) {
+  var repos = [];
+  var status = true;
+  var page = 1;
+  async.whilst(function () {
+    return status;
+  }, function (callback) {
+    findReposOnPage(page++, function (err, data) {
       if (err) {
-        cb(err);
+        callback(err);
         return;
       }
 
-      var repos = JSON.parse(data);
-      cb(null, repos);
-    });
-  }
+      repos = repos.concat(data);
+      status = data.length > 0;
+      callback();
+  });
+  }, function (err) {
+    cb(err, repos);
+  });
+}
 
-  function _trimRepos(repos, cb) {
-    repos = repos.slice(0, 4);
-    cb(null, repos);
-  }
+function _saveRepos(data, cb) {
+  fs.writeFile('./_repos.json', JSON.stringify(data), function (err) {
+    cb(err, data);
+  });
+}
 
-  function getBlocks(repos, cb) {
-    async.mapLimit(repos, 4, getBlock, function (err, results) {
-      cb(err, results);
-    });
-  }
-
-  function _readBlocks(cb) {
-    fs.readFile('./_blocks.json', function (err, data) {
-      if (err) {
-        cb(err);
-        return;
-      }
-
-      var blocks = JSON.parse(data);
-      cb(null, blocks);
-    });
-  }
-
-  function gzipBlocks(blocks, cb) {
-    zlib.gzip(JSON.stringify(blocks), function (err, data) {
-      cb(err, data);
-    });
-  }
-
-  function _saveLocally(data, cb) {
-    if (!Buffer.isBuffer(data)) {
-      data = JSON.stringify(data);
-    }
-
-    fs.writeFile('./blocks.json', data, function (err) {
-      cb(err, data);
-    });
-  }
-
-  function saveBlocks(data, cb) {
-    bucket.putObject({Body: data}, function (err) {
-      cb(err, data);
-    });
-  }
-
-  async.seq(findRepos, getBlocks, gzipBlocks, saveBlocks)(function (err, data) {
+function _readRepos(cb) {
+  fs.readFile('./_repos.json', function (err, data) {
     if (err) {
-      console.error('ERROR - ', err);
+      cb(err);
       return;
     }
 
-    console.log('saved blocks');
+    var repos = JSON.parse(data);
+    cb(null, repos);
   });
-};
+}
 
-if (require.main === module) {
-  main();
+function _trimRepos(repos, cb) {
+  repos = repos.slice(0, 4);
+  cb(null, repos);
+}
+
+function getBlocks(repos, cb) {
+  async.mapLimit(repos, 4, getBlock, function (err, results) {
+    cb(err, results);
+  });
+}
+
+function _saveBlocks(data, cb) {
+  fs.writeFile('./_blocks.json', JSON.stringify(data), function (err) {
+    cb(err, data);
+  });
+}
+
+function _readBlocks(cb) {
+  fs.readFile('./_blocks.json', function (err, data) {
+    if (err) {
+      cb(err);
+      return;
+    }
+
+    var blocks = JSON.parse(data);
+    cb(null, blocks);
+  });
 }

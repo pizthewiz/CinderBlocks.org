@@ -1,8 +1,5 @@
 
 ### INTERN
-- reorganize into a module
-- use gulp to generate and upload blocks.json
-- timing and status logging, something curses and color would be nice
 - check for cinderblock.png, record presence
 - check for and record sample count
 - read cinderblock.xml, record supported, template count, url, library, summary

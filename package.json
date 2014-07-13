@@ -7,18 +7,18 @@
     "url": "https://github.com/pizthewiz/CinderBlocks.org.git"
   },
   "dependencies": {
-    "async": "*",
-    "aws-sdk": "*",
+    "request": "*",
     "cheerio": "*",
     "octonode": "*",
-    "request": "*"
+    "async": "*"
   },
   "devDependencies": {
     "gulp": "^3.8.6",
-    "gulp-awspublish": "0.0.18"
-  }
+    "gulp-awspublish": "0.0.18",
+    "gulp-rename": "^1.2.0"
+  },
   "engines": {
     "node": "0.10.x"
   },
-  "private": true,
+  "private": true
 }
