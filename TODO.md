@@ -21,7 +21,6 @@
 - add a favicon
 
 ### GENERAL
-- use [gulp](http://gulpjs.com) for task launching?
 - set [S3 bucket policy](https://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html) referrer check
 - periodically run intern on [Heroku](https://www.heroku.com/) or [nodejitsu](https://www.nodejitsu.com/)
 
