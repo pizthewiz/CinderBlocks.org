@@ -8,6 +8,7 @@ var async = require('async');
 var request = require('request');
 var cheerio = require('cheerio');
 var github = require('octonode');
+var xml2js = require('xml2js');
 
 var client = github.client({
   id: process.env.GITHUB_ID,
@@ -21,9 +22,9 @@ module.exports.generate = generate;
 //    <PAGES + 1> GET to github.com
 //  GET BLOCK:
 //    <REPOS> GET to api.github.com
-//    <REPOS> GET to github.com
+//    <REPOS * 2> GET to github.com
 function generate (cb) {
-  async.seq(findRepos, getBlocks, _saveBlocks)(function (err, data) {
+  async.seq(_readRepos, getBlocks, _saveBlocks)(function (err, data) {
     cb(err, data);
   });
 }
@@ -61,46 +62,87 @@ function getBlock(fullName, callback) {
 //    return;
 //  }
 
-  var repo = client.repo(fullName);
-  repo.info(function (err, data, headers) {
-    if (err) {
-      callback(err);
-      return;
-    }
+  var defaultBranch;
 
-    var block = {
-      id: data.id,
-      name: data.name,
-      full_name: data.full_name,
-      owner: {
-        id: data.owner.id,
-        name: data.owner.login,
-        url: data.owner.html_url,
-        avatar_url: data.owner.avatar_url
-      },
-      description: data.description || null,
-      url: data.html_url,
-      created: data.created_at,
-      updated: data.updated_at,
-      star_count: data.stargazers_count,
-      image_url: null,
-//      sample_count: 0,
-//      supports: [],
-//      template_count: 0,
-//      forks: []
-    };
+  async.seq(_info, _png, _xml)(callback);
 
-    var url = util.format("https://raw.githubusercontent.com/%s/%s/cinderblock.png", data.full_name, data.default_branch);
+  function _info(cb) {
+    client.repo(fullName).info(function (err, data, headers) {
+      if (err) {
+        cb(err);
+        return;
+      }
+
+      var block = {
+        id: data.id,
+        name: data.name,
+        full_name: data.full_name,
+        owner: {
+          id: data.owner.id,
+          name: data.owner.login,
+          url: data.owner.html_url,
+          avatar_url: data.owner.avatar_url
+        },
+        description: data.description,
+        url: data.html_url,
+        created: data.created_at,
+        updated: data.updated_at,
+        star_count: data.stargazers_count,
+        image_url: null,
+//        sample_count: 0,
+        supports: [],
+        template_count: 0,
+//        forks: []
+      };
+
+      defaultBranch = data.default_branch;
+
+      cb(null, block);
+    });
+  }
+
+  function _png(block, cb) {
+    var url = util.format("https://raw.githubusercontent.com/%s/%s/cinderblock.png", block.full_name, defaultBranch);
     hasResource(url, function (err, exists) {
       if (err) {
-        callback(err);
+        cb(err);
         return;
       }
 
       block.image_url = exists ? url : null;
-      callback(null, block);
+      cb(null, block);
     });
-  });
+  }
+
+  function _xml(block, cb) {
+    var url = util.format("https://raw.githubusercontent.com/%s/%s/cinderblock.xml", block.full_name, defaultBranch);
+    readResource(url, function (err, data) {
+      if (err) {
+        cb(err);
+        return;
+      }
+
+      var parser = new xml2js.Parser();
+      parser.parseString(data, function (err, result) {
+        if (err) {
+          console.error('ERROR - failed to parse cinderblock.xml for %s, skipping...', block.full_name);
+          // NB - skip this block, don't kill the entire process
+          cb(null, null);
+          return;
+        }
+
+        var rootElement = result.cinder;
+        var blockElement = rootElement.block[0];
+        block.description = block.description || blockElement.$.summary || '';
+        block.supports = blockElement.supports ? blockElement.supports.map(function (e) {
+          return e.$.os || null;
+        }).filter(function (e) { return e !== null; }) : [];
+        block.template_count = rootElement.template ? rootElement.template.length : 0;
+
+        cb(null, block);
+      });
+    });
+  }
 }
 
 function hasResource(url, callback) {
@@ -167,12 +209,14 @@ function _readRepos(cb) {
 }
 
 function _trimRepos(repos, cb) {
-  repos = repos.slice(0, 4);
+  repos = repos.slice(0, 1);
   cb(null, repos);
 }
 
 function getBlocks(repos, cb) {
   async.mapLimit(repos, 4, getBlock, function (err, results) {
+    // remove nulls representing skipped blocks
+    results = results.filter(function (e) { return e !== null; });
     cb(err, results);
   });
 }

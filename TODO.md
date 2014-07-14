@@ -1,9 +1,7 @@
 
 ### INTERN
 - check for and record sample count
-- read cinderblock.xml, record supported, template count, url, library, summary
 - do something with forks
-- add function to set bucket policy
 
 ### WEB
 - basic info layout

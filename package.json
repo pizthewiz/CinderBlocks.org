@@ -10,12 +10,13 @@
     "request": "*",
     "cheerio": "*",
     "octonode": "*",
+    "xml2js": "*",
     "async": "*"
   },
   "devDependencies": {
-    "gulp": "^3.8.6",
-    "gulp-awspublish": "0.0.18",
-    "gulp-rename": "^1.2.0"
+    "gulp": "*",
+    "gulp-awspublish": "*",
+    "gulp-rename": "*"
   },
   "engines": {
     "node": "0.10.x"
