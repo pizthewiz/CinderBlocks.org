@@ -17,9 +17,11 @@ var client = github.client({
 module.exports.generate = generate;
 
 // HTTP TRAFFIC:
-//  <PAGES + 1> GET to api.github.com
-//  <REPOS> GET to api.github.com
-//  <1> PUT to AWS S3
+//  FIND REPOS:
+//    <PAGES + 1> GET to github.com
+//  GET BLOCK:
+//    <REPOS> GET to api.github.com
+//    <REPOS> GET to github.com
 function generate (cb) {
   async.seq(findRepos, getBlocks, _saveBlocks)(function (err, data) {
     cb(err, data);
@@ -55,11 +57,12 @@ function findReposOnPage(page, callback) {
 
 function getBlock(fullName, callback) {
 //  if (!client.id || !client.secret) {
-//  	callback({msg: 'Must define GITHUB_ID and GITHUB_SECRET environment variables'});
+//    callback({msg: 'Must define GITHUB_ID and GITHUB_SECRET environment variables'});
 //    return;
 //  }
 
-  client.repo(fullName).info(function (err, data, headers) {
+  var repo = client.repo(fullName);
+  repo.info(function (err, data, headers) {
     if (err) {
       callback(err);
       return;
@@ -75,24 +78,50 @@ function getBlock(fullName, callback) {
         url: data.owner.html_url,
         avatar_url: data.owner.avatar_url
       },
-      description: data.description,
+      description: data.description || null,
       url: data.html_url,
       created: data.created_at,
       updated: data.updated_at,
       star_count: data.stargazers_count,
-//      image: null,
+      image_url: null,
 //      sample_count: 0,
+//      supports: [],
+//      template_count: 0,
 //      forks: []
     };
-    callback(null, block);
-  });  
+
+    var url = util.format("https://raw.githubusercontent.com/%s/%s/cinderblock.png", data.full_name, data.default_branch);
+    hasResource(url, function (err, exists) {
+      if (err) {
+        callback(err);
+        return;
+      }
+
+      block.image_url = exists ? url : null;
+      callback(null, block);
+    });
+  });
 }
 
-function hasImage(fullName, branch, callback) {
-  // TODO - use data.default_branch from client.repo(fullName).info()
-  var url = util.format("https://raw.githubusercontent.com/%s/%s/cinderblock.png", fullName, branch);
+function hasResource(url, callback) {
   request.head(url, {}, function (err, res, body) {
-    callback(err, res.statusCode === 200);
+    if (err) {
+      callback(err);
+      return;
+    }
+
+    callback(null, res.statusCode === 200);
+  });
+}
+
+function readResource(url, callback) {
+  request.get(url, {}, function (err, res, body) {
+    if (err) {
+      callback(err);
+      return;
+    }
+
+    callback(null, body);
   });
 }
 

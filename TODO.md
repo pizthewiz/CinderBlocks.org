@@ -1,6 +1,5 @@
 
 ### INTERN
-- check for cinderblock.png, record presence
 - check for and record sample count
 - read cinderblock.xml, record supported, template count, url, library, summary
 - do something with forks
