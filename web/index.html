@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="normalize.css">
-    <style type="text/css">
+    <style>
       body {
         margin: 10px;
       }
@@ -32,7 +32,20 @@
       <section>
         <ul id="block-list">
           <li ng-repeat="block in blocks | filter:filterFunc | orderBy:predicate:reverse">
-            <a href="{{block.url}}">{{block.name}}</a>
+            <a href="{{block.url}}">{{block.name}}</a><br>
+            {{block.description}}<br>
+            <div>
+              <ng-pluralize count="block.sample_count" when="{
+                  '0': 'No Samples',
+                  '1': '1 Sample',
+                  'other': '{} Samples'
+                }">
+              </ng-pluralize>
+            </div>
+            <a href="{{block.owner.url}}">
+              <img ng-src="{{block.owner.avatar_url}}s=140" width="24" height="24">{{block.owner.name}}
+            </a><br>
+            Last updated: {{block.updated | relativeTime}} ★ ({{block.star_count}})
           </li>
         </ul>
       </section>
@@ -40,6 +53,7 @@
     <footer>Made With 👏 </footer>
     <script>
       (function () {
+        'use strict';
         angular.module('house', [])
           .controller('HouseController', ['$scope', '$http', function ($scope, $http) {
             $scope.blocks = [];
@@ -75,6 +89,53 @@
                 $scope.predicate = property;
               } else {
                 $scope.reverse = !$scope.reverse;
+              }
+            };
+          }])
+
+          // mostly taken from https://github.com/wildlyinaccurate/angular-relative-date
+          .value('now', new Date())
+          .filter('relativeTime', ['now', function (now) {
+            return function (string) {
+              var date = new Date(string);
+              var delta = Math.round((now - date) / 1000);
+
+              var second = 1;
+              var minute = second * 60;
+              var hour = minute * 60;
+              var day = hour * 24;
+              var week = day * 7;
+              var month = day * 30;
+              var year = day * 365;
+
+              if (delta < second * 30) {
+                return 'just now';
+              } else if (delta < minute) {
+                return '' + delta + ' seconds ago';
+              } else if (delta < minute * 2) {
+                return 'a minute ago';
+              } else if (delta < hour) {
+                return '' + Math.floor(delta / minute) + ' minutes ago';
+              } else if (delta < hour * 2) {
+                return 'an hour ago';
+              } else if (delta < day) {
+                return '' + Math.floor(delta / hour) +  ' hours ago';
+              } else if (delta < day * 2) {
+                return 'yesterday';
+              } else if (delta < week) {
+                return '' + Math.floor(delta / day) +  ' days ago';
+              } else if (delta < week * 2) {
+                return 'last week';
+              } else if (delta < month) {
+                return '' + Math.floor(delta / week) +  ' weeks ago';
+              } else if (delta < month * 2) {
+                return 'last month';
+              } else if (delta < year) {
+                return '' + Math.floor(delta / month) +  ' months ago';
+              } else if (delta < year * 2) {
+                return 'last year';
+              } else {
+                return 'years ago';
               }
             };
           }]);
