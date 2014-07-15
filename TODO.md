@@ -10,8 +10,6 @@
 - some analytics: [MixPanel's Partner Plan](https://mixpanel.com/free/) or [Amplitude](https://amplitude.com)?
 - draw block image into canvas to scale/center
 - create default block image, cycle through colors
-- filter by: OS, samples
-- sort by: stars, created, updated
 - add a favicon
 
 ### GENERAL
@@ -19,5 +17,4 @@
 - periodically run intern on [Heroku](https://www.heroku.com/) or [nodejitsu](https://www.nodejitsu.com/)
 
 ### LATER
-- consider [PourOver](http://nytimes.github.io/pourover/) for block sorting and filtering
 - consider persistant blocks_metadata.json for key-value metadata store
