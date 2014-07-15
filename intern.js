@@ -21,7 +21,7 @@ module.exports.generate = generate;
 //  FIND REPOS:
 //    <PAGES + 1> GET to github.com
 //  GET BLOCK:
-//    <REPOS> GET to api.github.com
+//    <REPOS * 2> GET to api.github.com
 //    <REPOS * 2> GET to github.com
 function generate (cb) {
   async.seq(findRepos, getBlocks, _saveBlocks)(function (err, data) {
@@ -62,12 +62,13 @@ function getBlock(fullName, callback) {
 //    return;
 //  }
 
+  var repo = client.repo(fullName);
   var defaultBranch;
-
-  async.seq(_info, _png, _xml)(callback);
+  
+  async.seq(_info, _samples, _png, _xml)(callback);
 
   function _info(cb) {
-    client.repo(fullName).info(function (err, data, headers) {
+    repo.info(function (err, data, headers) {
       if (err) {
         cb(err);
         return;
@@ -89,7 +90,7 @@ function getBlock(fullName, callback) {
         updated: data.updated_at,
         star_count: data.stargazers_count,
         image_url: null,
-//        sample_count: 0,
+        sample_count: 0,
         supports: [],
         template_count: 0,
 //        forks: []
@@ -97,6 +98,25 @@ function getBlock(fullName, callback) {
 
       defaultBranch = data.default_branch;
 
+      cb(null, block);
+    });
+  }
+
+  function _samples(block, cb) {
+    repo.contents('samples', function (err, data, headers) {
+      if (err) {
+        // treat 404 as non-fatal
+        if (err.statusCode === 404) {
+          cb(null, block);
+          return;
+        }
+
+        cb(err);
+        return;
+      }
+
+      var count = data.filter(function (f) { return f.type === 'dir'; }).length;
+      block.sample_count = count;
       cb(null, block);
     });
   }

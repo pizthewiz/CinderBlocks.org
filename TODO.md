@@ -1,6 +1,5 @@
 
 ### INTERN
-- check for and record sample count
 - do something with forks
 
 ### WEB
