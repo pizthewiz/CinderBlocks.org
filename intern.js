@@ -24,7 +24,7 @@ module.exports.generate = generate;
 //    <REPOS> GET to api.github.com
 //    <REPOS * 2> GET to github.com
 function generate (cb) {
-  async.seq(_readRepos, getBlocks, _saveBlocks)(function (err, data) {
+  async.seq(findRepos, getBlocks, _saveBlocks)(function (err, data) {
     cb(err, data);
   });
 }
