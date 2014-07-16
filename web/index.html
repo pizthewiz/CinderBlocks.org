@@ -34,18 +34,17 @@
           <li ng-repeat="block in blocks | filter:filterFunc | orderBy:predicate:reverse">
             <a href="{{block.url}}">{{block.name}}</a><br>
             {{block.description}}<br>
-            <div>
-              <ng-pluralize count="block.sample_count" when="{
-                  '0': 'No Samples',
-                  '1': '1 Sample',
-                  'other': '{} Samples'
-                }">
-              </ng-pluralize>
-            </div>
+            <ng-pluralize count="block.sample_count" when="{
+                '0': 'No Samples',
+                '1': '1 Sample',
+                'other': '{} Samples'
+              }">
+            </ng-pluralize><br>
             <a href="{{block.owner.url}}">
               <img ng-src="{{block.owner.avatar_url}}s=140" width="24" height="24">{{block.owner.name}}
             </a><br>
-            Last updated: {{block.updated | relativeTime}} ★ ({{block.star_count}})
+            Last updated: {{block.updated | relativeTime}}<br>
+            ★ ({{block.star_count}})
           </li>
         </ul>
       </section>
@@ -73,7 +72,6 @@
                 var index = $scope.filter.supports.indexOf(os);
                 $scope.filter.supports.splice(index, 1);
               } else {
-                // replace, a compound os filter would probably be silly
                 $scope.filter.supports = [os];
               }
             };
@@ -93,7 +91,7 @@
             };
           }])
 
-          // mostly taken from https://github.com/wildlyinaccurate/angular-relative-date
+          // based on https://github.com/wildlyinaccurate/angular-relative-date
           .value('now', new Date())
           .filter('relativeTime', ['now', function (now) {
             return function (string) {
