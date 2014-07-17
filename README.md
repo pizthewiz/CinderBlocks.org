@@ -9,6 +9,8 @@ There are many things the project does not do, including but certainly not limit
 - Comments
 - Twitter announcements
 
+*NOTE* The microsite is un-styled at present.
+
 ### DEVELOPMENT
 The repository contains two primary pieces, `web` and `intern`. The `web` folder contains a static user-facing microsite that is served directly via [AWS S3](http://aws.amazon.com/s3/). Conversely, `intern.js` is a [Node.js](http://nodejs.org) module that uses the [GitHub API](https://developer.github.com/v3/) (and scraping) to discover blocks and fetch the associated metadata.
 
