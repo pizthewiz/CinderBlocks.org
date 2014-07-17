@@ -10,6 +10,16 @@
       body {
         margin: 10px;
       }
+      #block-list {
+        padding: 0;
+        list-style-type: none;
+      }
+      #block-list > li:not(:last-child) {
+        margin-bottom: 10px;
+      }
+      img.avatar {
+        margin-right: 5px;
+      }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.15/angular.min.js"></script>
   </head>
@@ -21,7 +31,10 @@
           <a href="" ng-click="setPredicate('created')">Created</a>
           <a href="" ng-click="setPredicate('updated')">Updated</a>
           <a href="" ng-click="setPredicate('name')">Name</a>
+          |
+          <!-- these need secondary sorting -->
           <a href="" ng-click="setPredicate('star_count')">Stars</a>
+          <a href="" ng-click="setPredicate('owner.name')">Owner</a>
         </div>
         <div>Filter:
           <a href="" ng-click="setFilter('macosx')">OS X</a>
@@ -30,26 +43,27 @@
         </div>
       </section>
       <section>
-        <ul id="block-list">
+        <ol id="block-list">
           <li ng-repeat="block in blocks | filter:filterFunc | orderBy:predicate:reverse">
             <a href="{{block.url}}">{{block.name}}</a><br>
             {{block.description}}<br>
             <ng-pluralize count="block.sample_count" when="{
-                '0': 'No Samples',
                 '1': '1 Sample',
                 'other': '{} Samples'
               }">
             </ng-pluralize><br>
             <a href="{{block.owner.url}}">
-              <img ng-src="{{block.owner.avatar_url}}s=140" width="24" height="24">{{block.owner.name}}
+              <img ng-src="{{block.owner.avatar_url}}s=140" width="24" height="24" class="avatar">{{block.owner.name}}
             </a><br>
             Last updated: {{block.updated | relativeTime}}<br>
             ★ ({{block.star_count}})
           </li>
-        </ul>
+        </ol>
       </section>
     </div>
+<!--
     <footer>Made With 👏 </footer>
+-->
     <script>
       (function () {
         'use strict';
@@ -83,7 +97,7 @@
             };
 
             $scope.setPredicate = function (property) {
-              if ($scope.predicate !== property) {
+              if (JSON.stringify($scope.predicate) !== JSON.stringify(property)) {
                 $scope.predicate = property;
               } else {
                 $scope.reverse = !$scope.reverse;
