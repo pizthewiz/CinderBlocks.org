@@ -31,10 +31,8 @@
           <a href="" ng-click="setPredicate('created')">Created</a>
           <a href="" ng-click="setPredicate('updated')">Updated</a>
           <a href="" ng-click="setPredicate('name')">Name</a>
-          |
-          <!-- these need secondary sorting -->
-          <a href="" ng-click="setPredicate('star_count')">Stars</a>
-          <a href="" ng-click="setPredicate('owner.name')">Owner</a>
+          <a href="" ng-click="setPredicate('star_count', 'name')">Stars</a>
+          <a href="" ng-click="setPredicate('owner.name', 'name')">Owner</a>
         </div>
         <div>Filter:
           <a href="" ng-click="setFilter('macosx')">OS X</a>
@@ -44,7 +42,8 @@
       </section>
       <section>
         <ol id="block-list">
-          <li ng-repeat="block in blocks | filter:filterFunc | orderBy:predicate:reverse">
+          <li ng-repeat="block in blocks | filter:filterFunc | orderBy:predicate">
+            <canvas width="72" height="72" data-image-url="{{block.image_url}}"></canvas>
             <a href="{{block.url}}">{{block.name}}</a><br>
             {{block.description}}<br>
             <ng-pluralize count="block.sample_count" when="{
@@ -71,8 +70,7 @@
           .controller('HouseController', ['$scope', '$http', function ($scope, $http) {
             $scope.blocks = [];
             $scope.filter = {supports: []};
-            $scope.predicate = 'created';
-            $scope.reverse = true;
+            $scope.predicate = ['-created'];
 
             $http({method: 'GET', url: 'http://cinderblocks.org/data/blocks.json'})
               .success(function(data, status, headers, config) {
@@ -96,11 +94,16 @@
               });
             };
 
-            $scope.setPredicate = function (property) {
-              if (JSON.stringify($scope.predicate) !== JSON.stringify(property)) {
-                $scope.predicate = property;
+            $scope.setPredicate = function (primary, secondary) {
+              var matches = $scope.predicate[0].match(/(\-)?(.*)/);
+              if (matches[2] !== primary) {
+                $scope.predicate = [primary];
+                if (secondary) {
+                  $scope.predicate.push(secondary);
+                }
               } else {
-                $scope.reverse = !$scope.reverse;
+                // toggle
+                $scope.predicate[0] = (matches[1] === undefined ? '-' : '') + primary;
               }
             };
           }])
