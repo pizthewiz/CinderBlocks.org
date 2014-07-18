@@ -7,7 +7,6 @@
 - add a simple about page with colophon and basic cinderblock info
 - add an error page
 - some analytics: [MixPanel's Partner Plan](https://mixpanel.com/free/) or [Amplitude](https://amplitude.com)?
-- draw block image into canvas to scale/center
 - create default block image, cycle through colors
 - add a favicon
 

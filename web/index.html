@@ -15,7 +15,7 @@
         list-style-type: none;
       }
       #block-list > li:not(:last-child) {
-        margin-bottom: 10px;
+        margin-bottom: 15px;
       }
       img.avatar {
         margin-right: 5px;
@@ -43,7 +43,7 @@
       <section>
         <ol id="block-list">
           <li ng-repeat="block in blocks | filter:filterFunc | orderBy:predicate">
-            <canvas width="72" height="72" data-image-url="{{::block.image_url}}"></canvas>
+            <canvas width="72" height="72" data-image-url="{{::block.image_url}}" badge></canvas>
             <a href="{{::block.url}}">{{::block.name}}</a><br>
             {{::block.description}}<br>
             <ng-pluralize count="::block.sample_count" when="{
@@ -104,6 +104,41 @@
               } else {
                 // toggle
                 $scope.predicate[0] = (matches[1] === undefined ? '-' : '') + primary;
+              }
+            };
+          }])
+
+          .directive('badge', [function () {
+            return {
+              restrict: 'A',
+//              template: '<canvas></canvas>',
+              link: function (scope, element, attrs) {
+                var ctx = element[0].getContext('2d');
+
+                if (!attrs.imageUrl) {
+                  // TODO - draw generic block badge
+                  ctx.fillStyle = 'rgb(180, 180, 180)';
+                  ctx.fillRect(0, 0, attrs.width, attrs.height);
+                } else {
+                  var img = new Image();
+                  img.onerror = function () {
+                    // TODO
+                  };
+                  img.onload = function () {
+                    // aspect fill and center
+                    var x = 0, y = 0, w = img.width, h = img.height;
+                    var aspectRatio = (img.width / img.height) / (attrs.width / attrs.height);
+                    if (aspectRatio > 1) {
+                      w /= aspectRatio;
+                      x = (img.width - w) / 2;
+                    } else if (aspectRatio < 1) {
+                      h *= aspectRatio;
+                      y = (img.height - h) / 2;
+                    }
+                    ctx.drawImage(img, x, y, w, h, 0, 0, attrs.width, attrs.height);
+                  };
+                  img.src = attrs.imageUrl;
+                }
               }
             };
           }])
