@@ -28,10 +28,10 @@
     <div ng-controller="HouseController">
       <section>
         <div>Sort:
-          <a href="" ng-click="setPredicate('created')">Created</a>
-          <a href="" ng-click="setPredicate('updated')">Updated</a>
+          <a href="" ng-click="setPredicate('-created')">Created</a>
+          <a href="" ng-click="setPredicate('-updated')">Updated</a>
           <a href="" ng-click="setPredicate('name')">Name</a>
-          <a href="" ng-click="setPredicate('star_count', 'name')">Stars</a>
+          <a href="" ng-click="setPredicate('-star_count', 'name')">Stars</a>
           <a href="" ng-click="setPredicate('owner.name', 'name')">Owner</a>
         </div>
         <div>Filter:
@@ -95,15 +95,13 @@
             };
 
             $scope.setPredicate = function (primary, secondary) {
-              var matches = $scope.predicate[0].match(/(\-)?(.*)/);
-              if (matches[2] !== primary) {
-                $scope.predicate = [primary];
-                if (secondary) {
-                  $scope.predicate.push(secondary);
-                }
+              var predicate = secondary ? [primary, secondary] : [primary];
+              if (JSON.stringify($scope.predicate) !== JSON.stringify(predicate)) {
+                $scope.predicate = predicate;
               } else {
-                // toggle
-                $scope.predicate[0] = (matches[1] === undefined ? '-' : '') + primary;
+                // reverse sort direction
+                var matches = $scope.predicate[0].match(/(\-)?(.*)/);
+                $scope.predicate[0] = (matches[1] === undefined ? '-' : '') + matches[2];
               }
             };
           }])
