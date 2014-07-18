@@ -4,7 +4,6 @@
 var gulp = require('gulp');
 
 var intern = require('./intern.js');
-var Readable = require('stream').Readable;
 
 var rename = require('gulp-rename');
 var awspublish = require('gulp-awspublish');
