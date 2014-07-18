@@ -1,5 +1,6 @@
 
 ### INTERN
+- set updated to GET /repos/:owner/:repo/branches/:branch
 - do something with forks
 
 ### WEB
@@ -16,3 +17,13 @@
 
 ### LATER
 - consider persistant blocks_metadata.json for key-value metadata store
+    [
+      {
+        id: 31337,
+        tags: [
+          'animation',
+          'interpolation'
+        ]
+      },
+      {...}
+    ]
