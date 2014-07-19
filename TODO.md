@@ -1,6 +1,5 @@
 
 ### INTERN
-- set updated to GET /repos/:owner/:repo/branches/:branch
 - do something with forks
 
 ### WEB
@@ -10,6 +9,7 @@
 - analytics? [MixPanel's Partner Plan](https://mixpanel.com/free/) or [Amplitude](https://amplitude.com)?
 - add an error page
 - add a simple about page with colophon and basic cinderblock info
+- revisit relativeTime to round to the closer value 4 hours 50 minutes ago should probably be 5, not 4
 
 ### GENERAL
 - set [S3 bucket policy](https://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html) referrer check

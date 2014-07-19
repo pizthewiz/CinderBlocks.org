@@ -3,10 +3,12 @@
   <head>
     <meta charset="utf-8">
     <title>CinderBlocks</title>
+    <meta name="keywords" content="">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 <!--
-    <link rel="shortcut icon" href="/favicon32.png">
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon-144.png">
+    <link rel="shortcut icon" href="/img/favicon32.png">
 -->
     <link rel="stylesheet" href="normalize.css">
     <style>
@@ -31,7 +33,7 @@
         <section>
           <div>Sort:
             <a href="" data-ng-click="setPredicate('-created')">Created</a>
-            <a href="" data-ng-click="setPredicate('-updated')">Updated</a>
+            <a href="" data-ng-click="setPredicate('-commit.date')">Committed</a>
             <a href="" data-ng-click="setPredicate('name')">Name</a>
             <a href="" data-ng-click="setPredicate('-star_count', 'name')">Stars</a>
             <a href="" data-ng-click="setPredicate('author.name', 'name')">Author</a>
@@ -49,8 +51,8 @@
               <h3><a href="{{::block.url}}">{{::block.name}}</a></h3>
               <p>{{::block.description}}</p>
               <p>
-                <a class="author" href="{{::block.author.url}}"><img data-ng-src="{{::block.author.avatar_url}}s=140" alt="{{::block.author.name}}" width="24" height="24" class="avatar">{{::block.author.name}}</a> ·
-                Updated <time datetime="{{::block.updated}}" is="relative-time" title="{{::block.updated | date:'medium' }}">{{::block.updated | relativeTime}}</time> ·
+                <a class="author" href="{{::block.author.url}}" rel="author"><img data-ng-src="{{::block.author.avatar_url}}s=140" alt="{{::block.author.name}}" width="24" height="24" class="avatar">{{::block.author.name}}</a> ·
+                Committed <time datetime="{{::block.commit.date}}" is="relative-time" title="{{::block.commit.date | date:'medium' }}">{{::block.commit.date | relativeTime}}</time> ·
                 ★ ({{::block.star_count}}) ·
                 <ng-pluralize count="::block.sample_count" when="{
                     '1': '1 Sample',
@@ -73,7 +75,7 @@
           .controller('HouseController', ['$scope', '$http', function ($scope, $http) {
             $scope.blocks = [];
             $scope.filter = {supports: []};
-            $scope.predicate = ['-created'];
+            $scope.predicate = ['-commit.date'];
 
             $http({method: 'GET', url: 'http://cinderblocks.org/data/blocks.json'})
               .success(function(data, status, headers, config) {

@@ -19,9 +19,9 @@ module.exports.generate = generate;
 
 // HTTP TRAFFIC:
 //  FIND REPOS:
-//    <PAGES + 1> GET to github.com
+//    <(REPOS / 10) + 1> GET to github.com
 //  GET BLOCK:
-//    <REPOS * 2> GET to api.github.com
+//    <REPOS * 3> GET to api.github.com
 //    <REPOS * 2> GET to github.com
 function generate (cb) {
   async.seq(findRepos, getBlocks, _saveBlocks)(function (err, data) {
@@ -32,7 +32,7 @@ function generate (cb) {
 // NB - scrape until global search is available via API 😁
 //  https://developer.github.com/changes/2013-10-18-new-code-search-requirements/
 function findReposOnPage(page, callback) {
-  var url = util.format("https://github.com/search?p=%s&q=cinder+path%3A%2Fcinderblock.xml&type=Code", page);
+  var url = util.format('https://github.com/search?p=%s&q=cinder+path%3A%2Fcinderblock.xml&type=Code', page);
   request.get(url, {}, function (err, res, body) {
     if (err) {
       callback(err);
@@ -57,15 +57,10 @@ function findReposOnPage(page, callback) {
 }
 
 function getBlock(fullName, callback) {
-//  if (!client.id || !client.secret) {
-//    callback({msg: 'Must define GITHUB_ID and GITHUB_SECRET environment variables'});
-//    return;
-//  }
-
   var repo = client.repo(fullName);
   var defaultBranch;
 
-  async.seq(_info, _samples, _png, _xml)(callback);
+  async.seq(_info, _commit, _samples, _png, _xml)(callback);
 
   function _info(cb) {
     repo.info(function (err, data, headers) {
@@ -92,11 +87,26 @@ function getBlock(fullName, callback) {
         image_url: null,
         sample_count: 0,
         supports: [],
-        template_count: 0,
-//        forks: []
+        template_count: 0
       };
 
       defaultBranch = data.default_branch;
+
+      cb(null, block);
+    });
+  }
+
+  function _commit(block, cb) {
+    repo.branch(defaultBranch, function (err, data, headers) {
+      if (err) {
+        cb(err);
+        return;
+      }
+
+      block.commit = {
+        // author vs committer
+        date: data.commit.commit.author.date
+      };
 
       cb(null, block);
     });
@@ -115,6 +125,7 @@ function getBlock(fullName, callback) {
         return;
       }
 
+      // count every directory as a sample
       var count = data.filter(function (f) { return f.type === 'dir'; }).length;
       block.sample_count = count;
       cb(null, block);
@@ -122,7 +133,7 @@ function getBlock(fullName, callback) {
   }
 
   function _png(block, cb) {
-    var url = util.format("https://raw.githubusercontent.com/%s/%s/cinderblock.png", block.full_name, defaultBranch);
+    var url = util.format('https://raw.githubusercontent.com/%s/%s/cinderblock.png', block.full_name, defaultBranch);
     hasResource(url, function (err, exists) {
       if (err) {
         cb(err);
@@ -135,7 +146,7 @@ function getBlock(fullName, callback) {
   }
 
   function _xml(block, cb) {
-    var url = util.format("https://raw.githubusercontent.com/%s/%s/cinderblock.xml", block.full_name, defaultBranch);
+    var url = util.format('https://raw.githubusercontent.com/%s/%s/cinderblock.xml', block.full_name, defaultBranch);
     readResource(url, function (err, data) {
       if (err) {
         cb(err);
