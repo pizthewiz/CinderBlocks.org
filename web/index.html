@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" ng-app="house">
+<html lang="en" data-ng-app="house">
   <head>
     <meta charset="utf-8">
     <title>CinderBlocks</title>
@@ -27,30 +27,30 @@
   <body>
     <header><h1>CinderBlocks</h1></header>
     <main role="main">
-      <div ng-controller="HouseController">
+      <div data-ng-controller="HouseController">
         <section>
           <div>Sort:
-            <a href="" ng-click="setPredicate('-created')">Created</a>
-            <a href="" ng-click="setPredicate('-updated')">Updated</a>
-            <a href="" ng-click="setPredicate('name')">Name</a>
-            <a href="" ng-click="setPredicate('-star_count', 'name')">Stars</a>
-            <a href="" ng-click="setPredicate('owner.name', 'name')">Owner</a>
+            <a href="" data-ng-click="setPredicate('-created')">Created</a>
+            <a href="" data-ng-click="setPredicate('-updated')">Updated</a>
+            <a href="" data-ng-click="setPredicate('name')">Name</a>
+            <a href="" data-ng-click="setPredicate('-star_count', 'name')">Stars</a>
+            <a href="" data-ng-click="setPredicate('owner.name', 'name')">Owner</a>
           </div>
           <div>Filter:
-            <a href="" ng-click="setFilter('macosx')">OS X</a>
-            <a href="" ng-click="setFilter('ios')">iOS</a>
-            <a href="" ng-click="setFilter('msw')">Windows</a>
+            <a href="" data-ng-click="setFilter('macosx')">OS X</a>
+            <a href="" data-ng-click="setFilter('ios')">iOS</a>
+            <a href="" data-ng-click="setFilter('msw')">Windows</a>
           </div>
         </section>
         <section>
           <ol id="block-list">
-            <li ng-repeat="block in blocks | filter:filterFunc | orderBy:predicate">
+            <li data-ng-repeat="block in blocks | filter:filterFunc | orderBy:predicate">
               <canvas width="72" height="72" data-image-url="{{::block.image_url}}" badge></canvas>
               <h3><a href="{{::block.url}}">{{::block.name}}</a></h3>
               <p>{{::block.description}}</p>
               <p>
                 <a class="author" href="{{::block.owner.url}}">
-                  <img ng-src="{{::block.owner.avatar_url}}s=140" width="24" height="24" class="avatar">{{::block.owner.name}}
+                  <img data-ng-src="{{::block.owner.avatar_url}}s=140" width="24" height="24" class="avatar">{{::block.owner.name}}
                 </a> ·
                 Updated {{::block.updated | relativeTime}} ·
                 ★ ({{::block.star_count}}) ·
