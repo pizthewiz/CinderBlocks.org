@@ -34,7 +34,7 @@
             <a href="" data-ng-click="setPredicate('-updated')">Updated</a>
             <a href="" data-ng-click="setPredicate('name')">Name</a>
             <a href="" data-ng-click="setPredicate('-star_count', 'name')">Stars</a>
-            <a href="" data-ng-click="setPredicate('owner.name', 'name')">Owner</a>
+            <a href="" data-ng-click="setPredicate('author.name', 'name')">Author</a>
           </div>
           <div>Filter:
             <a href="" data-ng-click="setFilter('macosx')">OS X</a>
@@ -49,9 +49,7 @@
               <h3><a href="{{::block.url}}">{{::block.name}}</a></h3>
               <p>{{::block.description}}</p>
               <p>
-                <a class="author" href="{{::block.owner.url}}">
-                  <img data-ng-src="{{::block.owner.avatar_url}}s=140" alt="{{::block.owner.name}}" width="24" height="24" class="avatar">{{::block.owner.name}}
-                </a> ·
+                <a class="author" href="{{::block.author.url}}"><img data-ng-src="{{::block.author.avatar_url}}s=140" alt="{{::block.author.name}}" width="24" height="24" class="avatar">{{::block.author.name}}</a> ·
                 Updated <time datetime="{{::block.updated}}" is="relative-time" title="{{::block.updated | date:'medium' }}">{{::block.updated | relativeTime}}</time> ·
                 ★ ({{::block.star_count}}) ·
                 <ng-pluralize count="::block.sample_count" when="{

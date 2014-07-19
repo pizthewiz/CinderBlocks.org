@@ -47,13 +47,13 @@ function findReposOnPage(page, callback) {
     var $ = cheerio.load(body);
     $('div.code-list-item').each(function () {
       var href = $(this).find('p.title a').attr('href');
-      // trim to form 'OWNER-LOGIN/REPO-NAME'
+      // trim to form 'AUTHOR-LOGIN/REPO-NAME'
       var fullname = /\/?([\w-]+\/[\w-]+)$/.exec(href)[1];
       repos.push(fullname);
     });
 
     callback(null, repos);
-  });  
+  });
 }
 
 function getBlock(fullName, callback) {
@@ -64,7 +64,7 @@ function getBlock(fullName, callback) {
 
   var repo = client.repo(fullName);
   var defaultBranch;
-  
+
   async.seq(_info, _samples, _png, _xml)(callback);
 
   function _info(cb) {
@@ -78,7 +78,7 @@ function getBlock(fullName, callback) {
         id: data.id,
         name: data.name,
         full_name: data.full_name,
-        owner: {
+        author: {
           id: data.owner.id,
           name: data.owner.login,
           url: data.owner.html_url,
@@ -105,7 +105,7 @@ function getBlock(fullName, callback) {
   function _samples(block, cb) {
     repo.contents('samples', function (err, data, headers) {
       if (err) {
-        // treat 404 as non-fatal
+        // 404 is non-fatal
         if (err.statusCode === 404) {
           cb(null, block);
           return;
