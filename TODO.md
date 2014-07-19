@@ -4,12 +4,12 @@
 - do something with forks
 
 ### WEB
-- basic info layout
-- add a simple about page with colophon and basic cinderblock info
+- style the page
+- fallback block image and colors
+- favicon
+- analytics? [MixPanel's Partner Plan](https://mixpanel.com/free/) or [Amplitude](https://amplitude.com)?
 - add an error page
-- some analytics: [MixPanel's Partner Plan](https://mixpanel.com/free/) or [Amplitude](https://amplitude.com)?
-- create default block image, cycle through colors
-- add a favicon
+- add a simple about page with colophon and basic cinderblock info
 
 ### GENERAL
 - set [S3 bucket policy](https://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html) referrer check
