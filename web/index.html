@@ -50,9 +50,9 @@
               <p>{{::block.description}}</p>
               <p>
                 <a class="author" href="{{::block.owner.url}}">
-                  <img data-ng-src="{{::block.owner.avatar_url}}s=140" width="24" height="24" class="avatar">{{::block.owner.name}}
+                  <img data-ng-src="{{::block.owner.avatar_url}}s=140" alt="{{::block.owner.name}}" width="24" height="24" class="avatar">{{::block.owner.name}}
                 </a> ·
-                Updated {{::block.updated | relativeTime}} ·
+                Updated <time datetime="{{::block.updated}}" is="relative-time" title="{{::block.updated | date:'medium' }}">{{::block.updated | relativeTime}}</time> ·
                 ★ ({{::block.star_count}}) ·
                 <ng-pluralize count="::block.sample_count" when="{
                     '1': '1 Sample',
@@ -132,7 +132,7 @@
                   ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
                     ctx.fillRect(0, 0, attrs.width, attrs.height);
                   };
-                  img.src = 'block.png';
+                  img.src = 'img/block.png';
                 }
 
                 if (!attrs.imageUrl) {
