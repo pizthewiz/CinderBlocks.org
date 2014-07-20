@@ -82,12 +82,17 @@ function getBlock(fullName, callback) {
         description: data.description,
         url: data.html_url,
         created: data.created_at,
+        // NB - date.updated_at reflects repo metadata changes too, not just commits
         updated: data.updated_at,
+        commit: {
+          date: null
+        },
         star_count: data.stargazers_count,
         image_url: null,
         sample_count: 0,
         supports: [],
-        template_count: 0
+        template_count: 0,
+        forks: []
       };
 
       defaultBranch = data.default_branch;
@@ -103,10 +108,8 @@ function getBlock(fullName, callback) {
         return;
       }
 
-      block.commit = {
-        // author vs committer
-        date: data.commit.commit.author.date
-      };
+      // author vs committer
+      block.commit.date = data.commit.commit.author.date
 
       cb(null, block);
     });
