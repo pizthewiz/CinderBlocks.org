@@ -189,19 +189,19 @@
               } else if (delta < day) {
                 return '' + Math.floor(delta / hour) +  ' hours ago';
               } else if (delta < day * 2) {
-                return 'yesterday';
+                return 'a day ago';
               } else if (delta < week) {
                 return '' + Math.floor(delta / day) +  ' days ago';
               } else if (delta < week * 2) {
-                return 'last week';
+                return 'a week ago';
               } else if (delta < month) {
                 return '' + Math.floor(delta / week) +  ' weeks ago';
               } else if (delta < month * 2) {
-                return 'last month';
+                return 'a month ago';
               } else if (delta < year) {
                 return '' + Math.floor(delta / month) +  ' months ago';
               } else if (delta < year * 2) {
-                return 'last year';
+                return 'a year ago';
               } else {
                 return 'years ago';
               }
