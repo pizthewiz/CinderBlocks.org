@@ -5,7 +5,7 @@
 ### WEB
 - style the page
 - fallback block image and colors
-- favicon
+- apple-touch-icon and favicon
 - analytics? [MixPanel's Partner Plan](https://mixpanel.com/free/) or [Amplitude](https://amplitude.com)?
 - add an error page
 - add a simple about page with colophon and basic cinderblock info
