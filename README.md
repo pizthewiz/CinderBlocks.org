@@ -9,7 +9,7 @@ There are many things the project does not do, including but certainly not limit
 - Comments
 - Twitter announcements
 
-**NOTE**: The block discovery mechanism is imperfect as the GitHub API does not yet allow searching code, and turn some blocks may not be found. The [search results](https://github.com/search?p=1&q=cinder+path%3A%2Fcinderblock.xml&type=Code) blocks are discovered from should be reviewed before reporting an issue. Also, the microsite is *entirely un-styled* at present.
+**NOTE**: The block discovery mechanism is imperfect as the GitHub API does not yet allow searching code, and turn some a stratagem is used that misses some blocks. Blocks are discovered from the following [search results](https://github.com/search?p=1&q=cinder+path%3A%2Fcinderblock.xml&type=Code), it may be worth giving that a look before reporting an issue. Also, the microsite is *entirely un-styled* at present.
 
 ### DEVELOPMENT
 The repository contains two primary pieces, `web` and `intern`. The `web` folder contains a static user-facing microsite that is served directly via [AWS S3](http://aws.amazon.com/s3/). Conversely, `intern.js` is a [Node.js](http://nodejs.org) module that uses the [GitHub API](https://developer.github.com/v3/) (and scraping) to discover blocks and fetch the associated metadata.
@@ -36,8 +36,12 @@ Naturally, a `gulp` task launches the whole process:
 ```sh
 $ gulp generate
 ```
+
+Some features used on the user-facing microsite are rather new and in turn, not well supported yet across all browsers.
+- [canvas blend modes](http://caniuse.com/#search=canvas blend modes)
+
 ### PRE-EXISTING
-There are a couple of existing projects that catalogue CinderBlocks, though neither has been updated in quite some time. Regardless they bare mentioning:
+There are a couple of existing projects that catalogue CinderBlocks, though neither has been updated in quite some time:
 - [Cindering](http://cindering.org/blocks/)
 - Kod3000's [Cinder Blocks](http://dany.pro/jects/ongoing/cinder_display_all_blocks.html)
 
