@@ -29,6 +29,22 @@ function generate (cb) {
   });
 }
 
+module.exports._search = function (user, cb) {
+  // NB - searches are currently scoped to a user or repository
+  client.search().code({
+    q: util.format('cinderblock.xml+in:path+user:%s', user)
+  }, function (err, result) {
+    if (err) {
+      cb(err);
+      return;
+    }
+
+    result.items.forEach(function (item) {
+      console.log(item.repository.full_name);
+    });
+  });
+};
+
 // NB - scrape until global search is available via API 😁
 //  https://developer.github.com/changes/2013-10-18-new-code-search-requirements/
 function findReposOnPage(page, callback) {
@@ -47,7 +63,7 @@ function findReposOnPage(page, callback) {
     var $ = cheerio.load(body);
     $('div.code-list-item').each(function () {
       var href = $(this).find('p.title a').attr('href');
-      // trim to form 'AUTHOR-LOGIN/REPO-NAME'
+      // trim to form 'AUTHOR/REPO'
       var fullname = /\/?([\w-]+\/[\w-]+)$/.exec(href)[1];
       repos.push(fullname);
     });

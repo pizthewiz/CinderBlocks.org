@@ -7,6 +7,7 @@ var intern = require('./intern.js');
 
 var rename = require('gulp-rename');
 var awspublish = require('gulp-awspublish');
+var gutil = require('gulp-util');
 
 var publisher = awspublish.create({
   key: process.env.AWS_ID,
@@ -35,8 +36,21 @@ gulp.task('generate', function (cb) {
   });
 });
 
+gulp.task('_search', function (cb) {
+  var user = gutil.env.user || 'pizthewiz';
+  intern._search(user, function (err) {
+    if (err) {
+      console.error(err);
+      cb(err);
+      return;
+    }
+
+    cb();
+  });
+});
+
 // web
-gulp.task('publish', function (cb) {
+gulp.task('publish', function () {
   return gulp.src('./web/**')
     .pipe(awspublish.gzip())
     .pipe(publisher.publish())
