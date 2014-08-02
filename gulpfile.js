@@ -36,19 +36,6 @@ gulp.task('generate', function (cb) {
   });
 });
 
-gulp.task('_search', function (cb) {
-  var user = gutil.env.user || 'pizthewiz';
-  intern._search(user, function (err) {
-    if (err) {
-      console.error(err);
-      cb(err);
-      return;
-    }
-
-    cb();
-  });
-});
-
 // web
 gulp.task('publish', function () {
   return gulp.src('./web/**')

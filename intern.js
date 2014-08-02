@@ -15,40 +15,25 @@ var client = github.client({
   secret: process.env.GITHUB_SECRET
 });
 
-module.exports.generate = generate;
-
 // HTTP TRAFFIC:
 //  FIND REPOS:
 //    <(REPOS / 10) + 1> GET to github.com
+//    <UNIQUE_USERS> GET to api.github.com (*NOT YET*)
 //  GET BLOCK:
 //    <REPOS * 3> GET to api.github.com
 //    <REPOS * 2> GET to github.com
 function generate (cb) {
-  async.seq(findRepos, getBlocks, _saveBlocks)(function (err, data) {
+  async.seq(scrape, getBlocks, _saveBlocks)(function (err, data) {
     cb(err, data);
   });
 }
-
-module.exports._search = function (user, cb) {
-  // NB - searches are currently scoped to a user or repository
-  client.search().code({
-    q: util.format('cinderblock.xml+in:path+user:%s', user)
-  }, function (err, result) {
-    if (err) {
-      cb(err);
-      return;
-    }
-
-    result.items.forEach(function (item) {
-      console.log(item.repository.full_name);
-    });
-  });
-};
+module.exports.generate = generate;
 
 // NB - scrape until global search is available via API 😁
 //  https://developer.github.com/changes/2013-10-18-new-code-search-requirements/
-function findReposOnPage(page, callback) {
+function scrapeSearchResultsPage(page, callback) {
   var url = util.format('https://github.com/search?p=%s&q=cinder+path%3A%2Fcinderblock.xml&type=Code', page);
+  // var url = util.format('https://github.com/search?p=%s&q=cinderblock.xml+in%3Apath&type=Code', page);
   request.get(url, {}, function (err, res, body) {
     if (err) {
       callback(err);
@@ -63,7 +48,7 @@ function findReposOnPage(page, callback) {
     var $ = cheerio.load(body);
     $('div.code-list-item').each(function () {
       var href = $(this).find('p.title a').attr('href');
-      // trim to form 'AUTHOR/REPO'
+      // trim to fullname, AUTHOR/REPO
       var fullname = /\/?([\w-]+\/[\w-]+)$/.exec(href)[1];
       repos.push(fullname);
     });
@@ -71,6 +56,34 @@ function findReposOnPage(page, callback) {
     callback(null, repos);
   });
 }
+
+function _handleRateLimit(data, headers, callback) {
+  if (parseInt(headers['x-ratelimit-remaining'], 10) == 0) {
+    var s = headers['x-ratelimit-reset'];
+    var ms = new Date(s * 1000) - new Date();
+    console.log('rate limited till %d, waiting %d ms', s, ms);
+    setTimeout(function () { callback(null, data); }, ms);
+    return;
+  }
+
+  callback(null, data);
+}
+
+function searchUser(user, callback) {
+  client.search().code({
+    q: util.format('cinderblock.xml+in:path+user:%s', user)
+    // q: util.format('path:cinderblock.xml+user:%s', user)
+  }, function (err, data, headers) {
+    if (err) {
+      console.log(headers);
+      callback(err);
+      return;
+    }
+
+    var result = data.items.map(function (item) { return item.repository.full_name; });
+    _handleRateLimit(result, headers, callback);
+  });
+};
 
 function getBlock(fullName, callback) {
   var repo = client.repo(fullName);
@@ -218,14 +231,15 @@ function readResource(url, callback) {
 }
 
 // wrappers
-function findRepos(cb) {
+function scrape(cb) {
   var repos = [];
   var status = true;
   var page = 1;
+
   async.whilst(function () {
     return status;
   }, function (callback) {
-    findReposOnPage(page++, function (err, data) {
+    scrapeSearchResultsPage(page++, function (err, data) {
       if (err) {
         callback(err);
         return;
@@ -234,9 +248,41 @@ function findRepos(cb) {
       repos = repos.concat(data);
       status = data.length > 0;
       callback();
-  });
+    });
   }, function (err) {
-    cb(err, repos);
+    // reject any repo that occurs more than once, not likely a block
+    var results = repos.filter(function (elem, idx, array) {
+      return array.indexOf(elem) === array.lastIndexOf(elem);
+    });
+    console.log('found %d repos, via scraping', results.length);
+
+    cb(err, results);
+  });
+}
+
+function _findRepos(data, cb) {
+  var users = data.map(function (fullname) {
+    // AUTHOR/REPO to AUTHOR
+    return /([\w-]+)\/[\w-]+$/.exec(fullname)[1];
+  }).filter(function (elem, idx, array) {
+    // unique users
+    return array.indexOf(elem) == idx;
+  });
+  console.log('%d unique users', users.length);
+
+  async.concatSeries(users, searchUser, function (err, results) {
+    if (err) {
+      cb(err);
+      return;
+    }
+
+    // reject any repo that occurs more than once, not likely a block
+    var repos = results.filter(function (elem, idx, array) {
+      return array.indexOf(elem) === array.lastIndexOf(elem);
+    });
+    console.log('found %d repos', repos.length);
+
+    cb(null, repos);
   });
 }
 
