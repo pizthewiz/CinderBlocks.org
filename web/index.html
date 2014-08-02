@@ -36,7 +36,7 @@
             <a href="" data-ng-click="setPredicate('-commit.date')">Committed</a>
             <a href="" data-ng-click="setPredicate('name')">Name</a>
             <a href="" data-ng-click="setPredicate('-star_count', 'name')">Stars</a>
-            <a href="" data-ng-click="setPredicate('author.name', 'name')">Author</a>
+            <a href="" data-ng-click="setPredicate('user.name', 'name')">User</a>
           </div>
           <div>Filter:
             <a href="" data-ng-click="setFilter('macosx')">OS X</a>
@@ -51,7 +51,7 @@
               <h3><a href="{{::block.url}}">{{::block.name}}</a></h3>
               <p>{{::block.description}}</p>
               <p>
-                <a class="author" href="{{::block.author.url}}" rel="author"><img data-ng-src="{{::block.author.avatar_url}}s=140" alt="{{::block.author.name}}" width="24" height="24" class="avatar">{{::block.author.name}}</a> ·
+                <a class="user" href="{{::block.user.url}}" rel="user"><img data-ng-src="{{::block.user.avatar_url}}s=140" alt="{{::block.user.name}}" width="24" height="24" class="avatar">{{::block.user.name}}</a> ·
                 Committed <time datetime="{{::block.commit.date}}" is="relative-time" title="{{::block.commit.date | date:'medium' }}">{{::block.commit.date | relativeTime}}</time> ·
                 ★ ({{::block.star_count}}) ·
                 <ng-pluralize count="::block.sample_count" when="{

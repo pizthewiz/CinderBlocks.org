@@ -48,7 +48,7 @@ function scrapeSearchResultsPage(page, callback) {
     var $ = cheerio.load(body);
     $('div.code-list-item').each(function () {
       var href = $(this).find('p.title a').attr('href');
-      // trim to fullname, AUTHOR/REPO
+      // trim to fullname, USER/REPO
       var fullname = /\/?([\w-]+\/[\w-]+)$/.exec(href)[1];
       repos.push(fullname);
     });
@@ -102,7 +102,7 @@ function getBlock(fullName, callback) {
         id: data.id,
         name: data.name,
         full_name: data.full_name,
-        author: {
+        user: {
           id: data.owner.id,
           name: data.owner.login,
           url: data.owner.html_url,
@@ -262,7 +262,7 @@ function scrape(cb) {
 
 function _findRepos(data, cb) {
   var users = data.map(function (fullname) {
-    // AUTHOR/REPO to AUTHOR
+    // USER/REPO to USER
     return /([\w-]+)\/[\w-]+$/.exec(fullname)[1];
   }).filter(function (elem, idx, array) {
     // unique users
