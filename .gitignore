@@ -1,6 +1,7 @@
 .DS_Store
 
-_blocks.json
+_users.json
 _repos.json
+_blocks.json
 
 .awspublish-cinderblocks.org
