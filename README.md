@@ -9,10 +9,12 @@ There are many things the project does not do, including but certainly not limit
 - Comments
 - Twitter announcements
 
-**NOTE**: The block discovery mechanism is imperfect as the GitHub API does not yet allow searching code, and turn some a stratagem is used that misses some blocks. Blocks are discovered from the following [search results](https://github.com/search?p=1&q=cinder+path%3A%2Fcinderblock.xml&type=Code), it may be worth giving that a look before reporting an issue. Also, the microsite is *entirely un-styled* at present.
+**NOTE**: The block discovery mechanism is imperfect as the GitHub API does not yet allow searching code, and turn some a stratagem is used that misses some blocks. Blocks are identified by the presence of a `cinderblock.xml` in a repository root, which is what would be required by Cinder's project creation tool [TinderBox](http://libcinder.org/docs/welcome/TinderBox.html).
+
+**ALSO NOTE**: The microsite is *entirely un-styled* at present.
 
 ### DEVELOPMENT
-The repository contains two primary pieces, `web` and `intern`. The `web` folder contains a static user-facing microsite that is served directly via [AWS S3](http://aws.amazon.com/s3/). Conversely, `intern.js` is a [Node.js](http://nodejs.org) module that uses the [GitHub API](https://developer.github.com/v3/) (and scraping) to discover blocks and fetch the associated metadata.
+The repository contains two primary pieces, `web` and `intern`. The `web` folder contains a static user-facing microsite that is served directly via [AWS S3](http://aws.amazon.com/s3/). Conversely, `intern.js` is a [Node.js](http://nodejs.org) module that uses the [GitHub API](https://developer.github.com/v3/) (and web scraping) to discover blocks and fetch the associated metadata.
 
 Two environment variables are required when publishing the `web` microsite:
 
@@ -47,8 +49,8 @@ There are a couple of existing projects that catalogue CinderBlocks, though neit
 
 ### REFERENCES
 - [Cinder Docs: CinderBlock](http://libcinder.org/docs/welcome/CinderBlocks.html)
-- [Cinder Docs: TinderBox](http://libcinder.org/docs/welcome/TinderBox.html)
 - [RFC: CinderBlocks](https://forum.libcinder.org/topic/rfc-cinderblocks)
+- [Cinder Docs: TinderBox](http://libcinder.org/docs/welcome/TinderBox.html)
 
 ### GREETZ
 - the [ofxAddons.com](http://ofxaddons.com) crew
