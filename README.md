@@ -1,17 +1,24 @@
 
 # CinderBlocks.org
-[CinderBlocks.org](http://cinderblocks.org) is microsite catalogue of *CinderBlocks*, extensions for the C++ creative-coding library [Cinder](http://libcinder.org). The block directory is kept fresh via a periodic task that queries [GitHub](https://github.com).
+[CinderBlocks.org](http://cinderblocks.org) is micro catalogue of *CinderBlocks*, extensions for the C++ creative-coding library [Cinder](http://libcinder.org). The block directory is kept fresh via a periodic task that queries [GitHub](https://github.com).
 
 There are many things the project does not do, including but certainly not limited to:
 - Forks
 - Categories or tags
-- User submissions
-- Comments
-- Twitter announcements
+- White or black lists
 
-**NOTE**: The block discovery mechanism is imperfect as the GitHub API does not yet allow searching code, and turn some a stratagem is used that misses some blocks. Blocks are identified by the presence of a `cinderblock.xml` in a repository root, which is what would be required by Cinder's project creation tool [TinderBox](http://libcinder.org/docs/welcome/TinderBox.html).
+**NOTE**: The microsite is *entirely un-styled* at present.
 
-**ALSO NOTE**: The microsite is *entirely un-styled* at present.
+### BLOCK DISCOVERY
+The block discovery mechanism is imperfect as the [GitHub API](https://developer.github.com/v3/) does not yet allow searching un-scoped code, and turn some a stratagem is used that misses some blocks. Blocks are identified by the presence of a `cinderblock.xml`, which is what would be required by Cinder's project creation tool [TinderBox](http://libcinder.org/docs/welcome/TinderBox.html).
+
+The process is roughly:
+1. [GitHub.com Search results](https://github.com/search?p=1&q=cinder+path%3A%2Fcinderblock.xml&type=Code) are scraped and the list of users compiled.
+2. Each user is then searched for the file `cinderblock.xml` and the resulting repositories compiled.
+3. Repositories with more than one `cinderblock.xml` file is rejected.
+4. Metadata is collected and collated for the remaining repositories.
+
+The extra steps 2-3 result in a few more blocks than if only the scraped repositories were used from step 1. Hopefully the [GitHub API](https://developer.github.com/v3/) exposes programatic searching at some point and this can be further improved.
 
 ### DEVELOPMENT
 The repository contains two primary pieces, `web` and `intern`. The `web` folder contains a static user-facing microsite that is served directly via [AWS S3](http://aws.amazon.com/s3/). Conversely, `intern.js` is a [Node.js](http://nodejs.org) module that uses the [GitHub API](https://developer.github.com/v3/) (and web scraping) to discover blocks and fetch the associated metadata.
@@ -42,7 +49,7 @@ $ gulp generate
 Some features used on the user-facing microsite are rather new and in turn, not well supported yet across all browsers.
 - [canvas blend modes](http://caniuse.com/#search=canvas blend modes)
 
-### PRE-EXISTING
+### PRE-EXISTING CATALOGUES
 There are a couple of existing projects that catalogue CinderBlocks, though neither has been updated in quite some time:
 - [Cindering](http://cindering.org/blocks/)
 - Kod3000's [Cinder Blocks](http://dany.pro/jects/ongoing/cinder_display_all_blocks.html)
