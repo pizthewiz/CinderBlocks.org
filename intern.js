@@ -24,7 +24,7 @@ var client = github.client({
 //    <REPOS * 3> GET to api.github.com
 //    <REPOS * 2> GET to github.com
 function generate (cb) {
-  async.seq(scrape, _uniqueUsersForRepos, findRepos, getBlocks, _saveBlocks)(function (err, data) {
+  async.seq(scrape, _uniqueUsersForRepos, _saveUsers, findRepos, _saveRepos, getBlocks, _saveBlocks)(function (err, data) {
     cb(err, data);
   });
 }
