@@ -5,7 +5,6 @@
 There are many things the project does not do, including but certainly not limited to:
 - Forks
 - Categories or tags
-- White or black lists
 
 **NOTE**: The microsite is *entirely un-styled* at present.
 
@@ -14,9 +13,10 @@ The block discovery mechanism is imperfect as the [GitHub API](https://developer
 
 The process is roughly:
 1. [GitHub.com Search results](https://github.com/search?p=1&q=cinder+path%3A%2Fcinderblock.xml&type=Code) are scraped and the list of users compiled.
-2. Each user is then searched for the file `cinderblock.xml` and the resulting repositories compiled.
-3. Repositories with more than one `cinderblock.xml` file is rejected.
-4. Metadata is collected and collated for the remaining repositories.
+2. If the file *_users-missing.json* exists, its contents are added to the user list.
+3. Each user is then searched for the file `cinderblock.xml` and the resulting repositories compiled.
+4. Repositories with more than one `cinderblock.xml` file is rejected.
+5. Metadata is collected and collated for the remaining repositories.
 
 The extra steps 2-3 result in a few more blocks than if only the scraped repositories were used from step 1. Hopefully the [GitHub API](https://developer.github.com/v3/) exposes programatic searching at some point and this can be further improved.
 
