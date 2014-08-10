@@ -24,7 +24,7 @@ var client = github.client({
 //    <REPOS * 3> GET to api.github.com
 //    <REPOS * 2> GET to github.com
 function generate (cb) {
-  async.seq(scrape, _uniqueUsersForRepos, _saveUsers, findRepos, _saveRepos, getBlocks, _saveBlocks)(function (err, data) {
+  async.seq(scrape, _uniqueUsersForRepos, _saveUsers, _addMissingUsers, findRepos, _saveRepos, getBlocks, _saveBlocks)(function (err, data) {
     cb(err, data);
   });
 }
@@ -286,6 +286,27 @@ function _readUsers(cb) {
 
     var repos = JSON.parse(data);
     cb(null, repos);
+  });
+}
+
+function _addMissingUsers(data, cb) {
+  if (!fs.existsSync('./_users-missing.json')) {
+    cb(null, data);
+    return;
+  }
+
+  fs.readFile('./_users-missing.json', function (err, d) {
+    if (err) {
+      cb(err);
+      return;
+    }
+
+    var results = data.concat(JSON.parse(d)).filter(function (elem, idx, array) {
+      return array.indexOf(elem) === array.lastIndexOf(elem);
+    });
+    console.log('adding %d missing users', results.length - data.length);
+
+    cb(null, results);
   });
 }
 
