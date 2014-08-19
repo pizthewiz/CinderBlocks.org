@@ -3,13 +3,15 @@
 - do something with forks
 
 ### WEB
+- use anchor to indicate sort and filter
 - style the page
 - fallback block image and colors
 - apple-touch-icon and favicon
 - analytics? [MixPanel's Partner Plan](https://mixpanel.com/free/) or [Amplitude](https://amplitude.com)?
-- add an error page
+- add 404 and 500 error pages
 - add a simple about content with colophon and basic cinderblock info with links
 - revisit relativeTime to round to the closer value 4 hours 50 minutes ago should probably just be 5, not 4
+- check out the [angularjs-styleguide](https://github.com/johnpapa/angularjs-styleguide)
 
 ### GENERAL
 - periodically run intern on [Heroku](https://www.heroku.com/) or [nodejitsu](https://www.nodejitsu.com/)
