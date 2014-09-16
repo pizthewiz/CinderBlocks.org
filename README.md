@@ -20,6 +20,8 @@ The process is roughly:
 
 The extra steps 2-3 result in a few more blocks than if only the scraped repositories were used from step 1. Hopefully the [GitHub API](https://developer.github.com/v3/) exposes programatic searching at some point and this can be further improved.
 
+⚠️ GitHub changed their search algorithm at some point in August 2014 and the search query previously used to find blocks, now returns 0 results. While a new method is found to dynamically discover blocks, only the static user whitelist *_users-missing.json* is used. 😢
+
 ### DEVELOPMENT
 The repository contains two primary pieces, `web` and `intern`. The `web` folder contains a static user-facing microsite that is served directly via [AWS S3](http://aws.amazon.com/s3/). Conversely, `intern.js` is a [Node.js](http://nodejs.org) module that uses the [GitHub API](https://developer.github.com/v3/) (and web scraping) to discover blocks and fetch the associated metadata.
 
