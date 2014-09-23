@@ -2,7 +2,6 @@
   "name": "intern",
   "version": "0.0.0",
   "description": "Crawl GitHub in search of CinderBlocks",
-  "main": "",
   "scripts": {
     "postinstall": "gulp find:users"
   },
