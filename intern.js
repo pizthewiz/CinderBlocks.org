@@ -302,12 +302,12 @@ function _readUsers(cb) {
 }
 
 function _addMissingUsers(data, cb) {
-  if (!fs.existsSync('./_users-missing.json')) {
+  if (!fs.existsSync('./users-missing.json')) {
     cb(null, data);
     return;
   }
 
-  fs.readFile('./_users-missing.json', function (err, d) {
+  fs.readFile('./users-missing.json', function (err, d) {
     if (err) {
       cb(err);
       return;
