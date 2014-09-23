@@ -27,6 +27,7 @@ module.exports.findUsers = function findUsers (cb) {
 //    <UNIQUE_USERS> GET to api.github.com
 //  GET BLOCKS:
 //    <REPOS * 3> GET to api.github.com
+//    <REPOS> HEAD to github.com
 //    <REPOS * 2> GET to github.com
 module.exports.findBlocks = function findBlocks (cb) {
   async.seq(_readUsers, _addMissingUsers, findRepos, _saveRepos, getBlocks, _saveBlocks)(cb);
