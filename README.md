@@ -26,8 +26,8 @@ The repository contains two primary pieces, `web` and `intern`. The `web` folder
 Two environment variables are required when publishing the `web` microsite:
 
 ```sh
-$ export AWS_ID=ID
-$ export AWS_SECRET=SECRET
+$ export AWS_ACCESS_KEY_ID=ID
+$ export AWS_SECRET_ACCESS_KEY=SECRET
 ```
 
 A [`gulp`](http://gulpjs.com) task triggers deployment:

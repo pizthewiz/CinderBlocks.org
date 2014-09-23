@@ -8,8 +8,8 @@ var awspublish = require('gulp-awspublish');
 var intern = require('./intern.js');
 
 var publisher = awspublish.create({
-  key: process.env.AWS_ID,
-  secret: process.env.AWS_SECRET,
+  key: process.env.AWS_ACCESS_KEY_ID,
+  secret: process.env.AWS_SECRET_ACCESS_KEY,
   region: 'us-west-1',
   bucket: 'cinderblocks.org'
 });
