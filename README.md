@@ -48,6 +48,11 @@ $ gulp find:users && gulp find:blocks
 
 Typically the `find:blocks` task can be decoupled from and run more often than `find:users` as blocks are updated far more often than created.
 
+The envinroment variables can be placed into a file *.env* and the tasks launched via [`foreman`](http://ddollar.github.io/foreman/) which will execute with the ENV set.
+```sh
+$ foreman run gulp find:blocks
+```
+
 ---
 
 Some features used on the user-facing microsite are rather new and in turn, not well supported yet across all browsers.
