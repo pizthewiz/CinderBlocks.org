@@ -18,30 +18,37 @@ var client = github.client({
 // HTTP TRAFFIC:
 //  FIND USERS:
 //    <(REPOS / 10) + 1> GET to github.com
+module.exports.findUsers = function findUsers (cb) {
+  async.seq(scrape, _uniqueUsersForRepos, _saveUsers)(cb);
+}
+
+// HTTP TRAFFIC:
 //  FIND REPOS:
 //    <UNIQUE_USERS> GET to api.github.com
 //  GET BLOCKS:
 //    <REPOS * 3> GET to api.github.com
 //    <REPOS * 2> GET to github.com
-function generate (cb) {
-  async.seq(scrape, _uniqueUsersForRepos, _saveUsers, _addMissingUsers, findRepos, _saveRepos, getBlocks, _saveBlocks)(function (err, data) {
-    cb(err, data);
-  });
+module.exports.findBlocks = function findBlocks (cb) {
+  async.seq(_readUsers, _addMissingUsers, findRepos, _saveRepos, getBlocks, _saveBlocks)(cb);
 }
-module.exports.generate = generate;
 
 // NB - scrape until global search is available via API 😁
 //  https://developer.github.com/changes/2013-10-18-new-code-search-requirements/
 function scrapeSearchResultsPageForRepos(page, callback) {
-  var url = util.format('https://github.com/search?p=%s&q=cinder+path%3A%2Fcinderblock.xml&type=Code', page);
-  // var url = util.format('https://github.com/search?p=%s&q=cinderblock.xml+in%3Apath&type=Code', page);
+  // var url = util.format('https://github.com/search?p=%s&q=cinder+path%3A%2Fcinderblock.xml&type=Code', page);
+  var url = util.format('https://github.com/search?p=%s&q=cinderblock.xml+in%3Apath&type=Code', page);
   request.get(url, {}, function (err, res, body) {
     if (err) {
       callback(err);
       return;
     }
     if (res.statusCode != 200) {
-      callback({statusCode: res.statusCode});
+      if (res.statusCode == 420) {
+        setTimeout(function () { scrapeSearchResultsPageForRepos(page, callback); }, 15000);
+        console.log('scraping rate limited, waiting 15 s');
+      } else {
+        callback({statusCode: res.statusCode});
+      }
       return;
     }
 
@@ -70,7 +77,7 @@ function searchUser(user, callback) {
         var s = err.headers['x-ratelimit-reset'];
         var ms = new Date(s * 1000) - new Date();
         setTimeout(function () { searchUser(user, callback); }, ms);
-        console.log('rate limited till %d, waiting %d ms to retry', s, ms);
+        console.log('search rate limited till %d, waiting %d ms to retry', s, ms);
         return;
       } else {
         callback(err);
@@ -265,6 +272,9 @@ function _uniqueUsersForRepos(data, cb) {
   }).filter(function (elem, idx, array) {
     // unique users
     return array.indexOf(elem) == idx;
+  }).sort(function (a, b) {
+    // alphabetize, case insensitive
+    return a.toLowerCase().localeCompare(b.toLowerCase());
   });
   console.log('%d unique users', results.length);
 
@@ -284,8 +294,10 @@ function _readUsers(cb) {
       return;
     }
 
-    var repos = JSON.parse(data);
-    cb(null, repos);
+    var data = JSON.parse(data);
+    console.log('read %d users', data.length);
+
+    cb(null, data);
   });
 }
 

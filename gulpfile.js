@@ -2,12 +2,10 @@
 'use strict';
 
 var gulp = require('gulp');
-
-var intern = require('./intern.js');
-
 var rename = require('gulp-rename');
 var awspublish = require('gulp-awspublish');
-var gutil = require('gulp-util');
+
+var intern = require('./intern.js');
 
 var publisher = awspublish.create({
   key: process.env.AWS_ID,
@@ -17,8 +15,19 @@ var publisher = awspublish.create({
 });
 
 // intern
-gulp.task('generate', function (cb) {
-  intern.generate(function (err, data) {
+gulp.task('find:users', function (cb) {
+  intern.findUsers(function (err, data) {
+    if (err) {
+      console.error(err);
+      cb(err);
+      return;
+    }
+
+    cb();
+  });
+});
+gulp.task('find:blocks', function (cb) {
+  intern.findBlocks(function (err, data) {
     if (err) {
       console.error(err);
       cb(err);
@@ -37,7 +46,7 @@ gulp.task('generate', function (cb) {
 });
 
 // web
-gulp.task('publish', function () {
+gulp.task('publish:web', function () {
   return gulp.src('./web/**')
     .pipe(awspublish.gzip())
     .pipe(publisher.publish())
