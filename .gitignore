@@ -1,5 +1,8 @@
 .DS_Store
 
+node_modules
+.env
+
 _users.json
 _repos.json
 _blocks.json
