@@ -45,7 +45,7 @@ function scrapeSearchResultsPageForRepos(page, callback) {
     if (res.statusCode != 200) {
       if (res.statusCode == 420) {
         setTimeout(function () { scrapeSearchResultsPageForRepos(page, callback); }, 15000);
-        console.log('scraping rate limited, waiting 15 s');
+        console.log('search result scrape rate limited, waiting 15 s to retry');
       } else {
         callback({statusCode: res.statusCode});
       }
@@ -77,7 +77,7 @@ function searchUser(user, callback) {
         var s = err.headers['x-ratelimit-reset'];
         var ms = new Date(s * 1000) - new Date();
         setTimeout(function () { searchUser(user, callback); }, ms);
-        console.log('search rate limited till %d, waiting %d ms to retry', s, ms);
+        console.log('code search rate limited till %d, waiting %d ms to retry', s, ms);
         return;
       } else {
         callback(err);
