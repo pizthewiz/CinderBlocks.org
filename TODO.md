@@ -1,6 +1,7 @@
 
 ### INTERN
 - do something with forks
+- run discovery periodically on [Heroku](https://www.heroku.com/)
 
 ### WEB
 - use anchor to indicate sort and filter
@@ -14,7 +15,6 @@
 - check out the [angularjs-styleguide](https://github.com/johnpapa/angularjs-styleguide)
 
 ### GENERAL
-- periodically run intern on [Heroku](https://www.heroku.com/) or [nodejitsu](https://www.nodejitsu.com/)
 - set [S3 bucket policy](https://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html) referrer check
 
 ### LATER
