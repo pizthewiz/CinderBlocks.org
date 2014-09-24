@@ -1,7 +1,6 @@
 
 ### INTERN
 - do something with forks
-- run discovery periodically on [Heroku](https://www.heroku.com/)
 
 ### WEB
 - use anchor to indicate sort and filter
