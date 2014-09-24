@@ -48,7 +48,9 @@ function scrapeSearchResultsPageForRepos(page, callback) {
         setTimeout(function () { scrapeSearchResultsPageForRepos(page, callback); }, 15000);
         console.log('search result scrape rate limited, waiting 15 s to retry');
       } else {
-        callback({statusCode: res.statusCode});
+        var e = new Error('bad status code');
+        e.statusCode = res.statusCode;
+        callback(e);
       }
       return;
     }
@@ -283,12 +285,23 @@ function _uniqueUsersForRepos(data, cb) {
 }
 
 function _saveUsers(data, cb) {
+  // only overwrite if the list is non-empty
+  if (!data || data.length == 0) {
+    cb(new Error('empty user list'));
+    return;
+  }
+
   fs.writeFile('./_users.json', JSON.stringify(data), function (err) {
     cb(err, data);
   });
 }
 
 function _readUsers(cb) {
+  if (!fs.existsSync('./_users.json')) {
+    cb(new Error('user list missing'));
+    return;
+  }
+
   fs.readFile('./_users.json', function (err, data) {
     if (err) {
       cb(err);
@@ -324,6 +337,11 @@ function _addMissingUsers(data, cb) {
 }
 
 function findRepos(data, cb) {
+  if (!data || data.length == 0) {
+    cb(new Error('empty user list'));
+    return;
+  }
+
   async.concatSeries(data, searchUser, function (err, results) {
     if (err) {
       cb(err);
