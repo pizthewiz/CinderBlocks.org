@@ -20,18 +20,18 @@ var client = github.client({
 //    <(REPOS / 10) + 1> GET to github.com
 module.exports.findUsers = function findUsers (cb) {
   async.seq(scrape, _uniqueUsersForRepos, _saveUsers)(cb);
-}
+};
 
 // HTTP TRAFFIC:
 //  FIND REPOS:
 //    <UNIQUE_USERS> GET to api.github.com
 //  GET BLOCKS:
 //    <REPOS * 3> GET to api.github.com
-//    <REPOS> HEAD to github.com
-//    <REPOS * 2> GET to github.com
+//    <REPOS * 2> HEAD to github.com
+//    <REPOS> GET to github.com
 module.exports.findBlocks = function findBlocks (cb) {
   async.seq(_readUsers, _addMissingUsers, findRepos, _saveRepos, getBlocks, _saveBlocks)(cb);
-}
+};
 
 // NB - scrape until global search is available via API 😁
 //  https://developer.github.com/changes/2013-10-18-new-code-search-requirements/
@@ -76,11 +76,11 @@ function searchUser(user, callback) {
     if (err) {
       // retry after a delay if rate limited.
       // NB - oddly headers is not populated but in err.headers
-      if (err.statusCode == 403 && parseInt(err.headers['x-ratelimit-remaining'], 10) == 0) {
+      if (err.statusCode == 403 && parseInt(err.headers['x-ratelimit-remaining'], 10) === 0) {
         var s = err.headers['x-ratelimit-reset'];
         var ms = new Date(s * 1000) - new Date();
         setTimeout(function () { searchUser(user, callback); }, ms);
-        console.log('code search rate limited till %d, waiting %d ms to retry', s, ms);
+        console.log('code search rate limited, waiting %d ms to retry', ms);
         return;
       } else {
         callback(err);
@@ -91,7 +91,7 @@ function searchUser(user, callback) {
     var result = data.items.map(function (item) { return item.repository.full_name; });
     callback(null, result);
   });
-};
+}
 
 function getBlock(fullName, callback) {
   var repo = client.repo(fullName);
@@ -146,7 +146,7 @@ function getBlock(fullName, callback) {
       }
 
       // author vs committer
-      block.commit.date = data.commit.commit.author.date
+      block.commit.date = data.commit.commit.author.date;
 
       cb(null, block);
     });
@@ -172,6 +172,49 @@ function getBlock(fullName, callback) {
     });
   }
 
+  function _xml(block, cb) {
+    var url = util.format('https://raw.githubusercontent.com/%s/%s/cinderblock.xml', block.full_name, defaultBranch);
+    hasResource(url, function (err, exists) {
+      if (err) {
+        cb(err);
+        return;
+      }
+
+      // skip if it doesn't have a root cinderblock.xml
+      if (!exists) {
+        cb(null, null);
+        return;
+      }
+
+      readResource(url, function (err, data) {
+        if (err) {
+          cb(err);
+          return;
+        }
+
+        var parser = new xml2js.Parser();
+        parser.parseString(data, function (err, result) {
+          if (err) {
+            console.error('ERROR - failed to parse cinderblock.xml for %s, skipping...', block.full_name);
+            // NB - skip this block, don't kill the entire process
+            cb(null, null);
+            return;
+          }
+
+          var rootElement = result.cinder;
+          var blockElement = rootElement.block[0];
+          block.description = block.description || blockElement.$.summary || '';
+          block.supports = blockElement.supports ? blockElement.supports.map(function (e) {
+            return e.$.os || null;
+          }).filter(function (e) { return e !== null; }) : [];
+          block.template_count = rootElement.template ? rootElement.template.length : 0;
+
+          cb(null, block);
+        });
+      });
+    });
+  }
+
   function _png(block, cb) {
     var url = util.format('https://raw.githubusercontent.com/%s/%s/cinderblock.png', block.full_name, defaultBranch);
     hasResource(url, function (err, exists) {
@@ -182,36 +225,6 @@ function getBlock(fullName, callback) {
 
       block.image_url = exists ? url : null;
       cb(null, block);
-    });
-  }
-
-  function _xml(block, cb) {
-    var url = util.format('https://raw.githubusercontent.com/%s/%s/cinderblock.xml', block.full_name, defaultBranch);
-    readResource(url, function (err, data) {
-      if (err) {
-        cb(err);
-        return;
-      }
-
-      var parser = new xml2js.Parser();
-      parser.parseString(data, function (err, result) {
-        if (err) {
-          console.error('ERROR - failed to parse cinderblock.xml for %s, skipping...', block.full_name);
-          // NB - skip this block, don't kill the entire process
-          cb(null, null);
-          return;
-        }
-
-        var rootElement = result.cinder;
-        var blockElement = rootElement.block[0];
-        block.description = block.description || blockElement.$.summary || '';
-        block.supports = blockElement.supports ? blockElement.supports.map(function (e) {
-          return e.$.os || null;
-        }).filter(function (e) { return e !== null; }) : [];
-        block.template_count = rootElement.template ? rootElement.template.length : 0;
-
-        cb(null, block);
-      });
     });
   }
 }
@@ -286,7 +299,7 @@ function _uniqueUsersForRepos(data, cb) {
 
 function _saveUsers(data, cb) {
   // only overwrite if the list is non-empty
-  if (!data || data.length == 0) {
+  if (!data || data.length === 0) {
     cb(new Error('empty user list'));
     return;
   }
@@ -302,13 +315,13 @@ function _readUsers(cb) {
     return;
   }
 
-  fs.readFile('./_users.json', function (err, data) {
+  fs.readFile('./_users.json', function (err, d) {
     if (err) {
       cb(err);
       return;
     }
 
-    var data = JSON.parse(data);
+    var data = JSON.parse(d);
     console.log('read %d users', data.length);
 
     cb(null, data);
@@ -337,7 +350,7 @@ function _addMissingUsers(data, cb) {
 }
 
 function findRepos(data, cb) {
-  if (!data || data.length == 0) {
+  if (!data || data.length === 0) {
     cb(new Error('empty user list'));
     return;
   }
@@ -365,14 +378,14 @@ function _saveRepos(data, cb) {
 }
 
 function _readRepos(cb) {
-  fs.readFile('./_repos.json', function (err, data) {
+  fs.readFile('./_repos.json', function (err, d) {
     if (err) {
       cb(err);
       return;
     }
 
-    var repos = JSON.parse(data);
-    cb(null, repos);
+    var data = JSON.parse(d);
+    cb(null, data);
   });
 }
 
@@ -391,13 +404,13 @@ function _saveBlocks(data, cb) {
 }
 
 function _readBlocks(cb) {
-  fs.readFile('./_blocks.json', function (err, data) {
+  fs.readFile('./_blocks.json', function (err, d) {
     if (err) {
       cb(err);
       return;
     }
 
-    var blocks = JSON.parse(data);
-    cb(null, blocks);
+    var data = JSON.parse(d);
+    cb(null, data);
   });
 }
