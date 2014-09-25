@@ -3,6 +3,7 @@
 
 var fs = require('fs');
 var util = require('util');
+var path = require('path');
 
 var async = require('async');
 var request = require('request');
@@ -304,18 +305,20 @@ function _saveUsers(data, cb) {
     return;
   }
 
-  fs.writeFile('./data/users.json', JSON.stringify(data), function (err) {
+  var filepath = path.join(__dirname, 'data/users.json');
+  fs.writeFile(filepath, JSON.stringify(data), function (err) {
     cb(err, data);
   });
 }
 
 function _readUsers(cb) {
-  if (!fs.existsSync('./data/users.json')) {
+  var filepath = path.join(__dirname, 'data/users.json');
+  if (!fs.existsSync(filepath)) {
     cb(new Error('user list missing'));
     return;
   }
 
-  fs.readFile('./data/users.json', function (err, d) {
+  fs.readFile(filepath, function (err, d) {
     if (err) {
       cb(err);
       return;
@@ -329,12 +332,13 @@ function _readUsers(cb) {
 }
 
 function _addMissingUsers(data, cb) {
-  if (!fs.existsSync('./data/users-missing.json')) {
+  var filepath = path.join(__dirname, 'data/users-missing.json');
+  if (!fs.existsSync(filepath)) {
     cb(null, data);
     return;
   }
 
-  fs.readFile('./data/users-missing.json', function (err, d) {
+  fs.readFile(filepath, function (err, d) {
     if (err) {
       cb(err);
       return;
@@ -372,13 +376,15 @@ function findRepos(data, cb) {
 }
 
 function _saveRepos(data, cb) {
-  fs.writeFile('./data/repos.json', JSON.stringify(data), function (err) {
+  var filepath = path.join(__dirname, 'data/repos.json');
+  fs.writeFile(filepath, JSON.stringify(data), function (err) {
     cb(err, data);
   });
 }
 
 function _readRepos(cb) {
-  fs.readFile('./data/repos.json', function (err, d) {
+  var filepath = path.join(__dirname, 'data/repos.json');
+  fs.readFile(filepath, function (err, d) {
     if (err) {
       cb(err);
       return;
@@ -398,13 +404,15 @@ function getBlocks(repos, cb) {
 }
 
 function _saveBlocks(data, cb) {
-  fs.writeFile('./data/blocks.json', JSON.stringify(data), function (err) {
+  var filepath = path.join(__dirname, 'data/blocks.json');
+  fs.writeFile(filepath, JSON.stringify(data), function (err) {
     cb(err, data);
   });
 }
 
 function _readBlocks(cb) {
-  fs.readFile('./data/blocks.json', function (err, d) {
+  var filepath = path.join(__dirname, 'data/blocks.json');
+  fs.readFile(filepath, function (err, d) {
     if (err) {
       cb(err);
       return;
