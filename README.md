@@ -21,19 +21,7 @@ The process occurs in two phases: (1) find all users with blocks (2-5) find all 
 The extra steps (2-3) result in a few more blocks than if only the repositories found via scraping were used from (1). Hopefully the [GitHub API](https://developer.github.com/v3/) exposes programatic un-scoped code searching at some point and this can be further improved and streamlined.
 
 ### DEVELOPMENT
-The repository contains two primary pieces, `web` and `intern`. The `web` folder contains a static user-facing microsite that is served directly via [AWS S3](http://aws.amazon.com/s3/). Conversely, `intern.js` is a [Node.js](http://nodejs.org) module that uses the [GitHub API](https://developer.github.com/v3/) (and web scraping) to discover blocks and fetch the associated metadata.
-
-Two environment variables are required when publishing the `web` microsite:
-
-```sh
-$ export AWS_ACCESS_KEY_ID=ID
-$ export AWS_SECRET_ACCESS_KEY=SECRET
-```
-
-A [`gulp`](http://gulpjs.com) task triggers deployment:
-```sh
-$ gulp publish:web
-```
+The repository contains two primary pieces, `app.js` and `intern.js`. `app.js` is a simple [Express](http://expressjs.com) application that simply serves static site content, there aren't any dynamic elements. `intern.js` is a [Node.js](http://nodejs.org) module that uses the [GitHub API](https://developer.github.com/v3/) (and web scraping) to discover blocks and fetch the associated metadata - `intern.js` is not used directly but via `gulp`. Both components are run on [Heroku](https://heroku.com).
 
 The [GitHub API](https://developer.github.com/v3/)  request limit is much higher when authenticated. Create a developer application in your [GitHub User Applications](https://github.com/settings/applications/) settings and use them in the environment:
 ```sh
@@ -41,12 +29,17 @@ $ export GITHUB_ID=ID
 $ export GITHUB_SECRET=SECRET
 ```
 
-Naturally, `gulp` tasks are used for the whole process:
+`gulp` tasks are used for the discovery process:
 ```sh
 $ gulp find:users && gulp find:blocks
 ```
 
-Typically the `find:blocks` task can be decoupled from and run more often than `find:users` as blocks are updated far more often than created.
+Typically the `find:blocks` task can be decoupled from and run more often than `find:users` as blocks are updated far more often than they are created.
+
+The static site can be run locally via:
+```sh
+$ npm start
+```
 
 The envinroment variables can be placed into a file *.env* and the tasks launched via [`foreman`](http://ddollar.github.io/foreman/) which will execute with the ENV set.
 ```sh
@@ -57,7 +50,6 @@ $ foreman run gulp find:blocks
 
 Some features used on the user-facing microsite are rather new and in turn, not well supported yet across all browsers.
 - [canvas blend modes](http://caniuse.com/#search=canvas blend modes)
-- HTTP responses from AWS provide gzipped resources
 
 ### PRE-EXISTING CATALOGUES
 There are a couple of existing projects that catalogue CinderBlocks, though neither has been updated in quite some time:
