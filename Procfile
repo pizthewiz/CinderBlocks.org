@@ -1,1 +1,1 @@
-worker: gulp find:blocks
+web: node app.js

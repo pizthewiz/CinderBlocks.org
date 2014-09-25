@@ -2,17 +2,8 @@
 'use strict';
 
 var gulp = require('gulp');
-var rename = require('gulp-rename');
-var awspublish = require('gulp-awspublish');
 
 var intern = require('./intern.js');
-
-var publisher = awspublish.create({
-  key: process.env.AWS_ACCESS_KEY_ID,
-  secret: process.env.AWS_SECRET_ACCESS_KEY,
-  region: 'us-west-1',
-  bucket: 'cinderblocks.org'
-});
 
 // intern
 gulp.task('find:users', function (cb) {
@@ -34,22 +25,6 @@ gulp.task('find:blocks', function (cb) {
       return;
     }
 
-    // TODO - use JSON.stringify(data) directly instead of file
-    gulp.src('./_blocks.json')
-      .pipe(rename('data/blocks.json'))
-      .pipe(awspublish.gzip())
-      .pipe(publisher.publish())
-      .pipe(publisher.cache())
-      .pipe(awspublish.reporter());
     cb();
   });
-});
-
-// web
-gulp.task('publish:web', function () {
-  return gulp.src('./web/**')
-    .pipe(awspublish.gzip())
-    .pipe(publisher.publish())
-    .pipe(publisher.cache())
-    .pipe(awspublish.reporter());
 });

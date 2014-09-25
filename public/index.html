@@ -77,7 +77,7 @@
             $scope.filter = {supports: []};
             $scope.predicate = ['-commit.date'];
 
-            $http({method: 'GET', url: 'http://cinderblocks.org/data/blocks.json'})
+            $http({method: 'GET', url: '/data/blocks.json'})
               .success(function(data, status, headers, config) {
                 $scope.blocks = data;
               }).error(function(data, status, headers, config) {

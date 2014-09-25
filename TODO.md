@@ -12,9 +12,11 @@
 - add a simple about content with colophon and basic cinderblock info with links
 - revisit relativeTime to round to the closer value 4 hours 50 minutes ago should probably just be 5, not 4
 - check out the [angularjs-styleguide](https://github.com/johnpapa/angularjs-styleguide)
+- use referrer to limit access to /data/blocks.json
+- make sure /data/blocks.json is GZIP compressed
 
 ### GENERAL
-- set [S3 bucket policy](https://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html) referrer check
+- point cinderblocks.org to Heroku web dyno
 
 ### LATER
 - consider persistant blocks_metadata.json for key-value metadata store

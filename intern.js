@@ -304,18 +304,18 @@ function _saveUsers(data, cb) {
     return;
   }
 
-  fs.writeFile('./_users.json', JSON.stringify(data), function (err) {
+  fs.writeFile('./data/users.json', JSON.stringify(data), function (err) {
     cb(err, data);
   });
 }
 
 function _readUsers(cb) {
-  if (!fs.existsSync('./_users.json')) {
+  if (!fs.existsSync('./data/users.json')) {
     cb(new Error('user list missing'));
     return;
   }
 
-  fs.readFile('./_users.json', function (err, d) {
+  fs.readFile('./data/users.json', function (err, d) {
     if (err) {
       cb(err);
       return;
@@ -329,12 +329,12 @@ function _readUsers(cb) {
 }
 
 function _addMissingUsers(data, cb) {
-  if (!fs.existsSync('./users-missing.json')) {
+  if (!fs.existsSync('./data/users-missing.json')) {
     cb(null, data);
     return;
   }
 
-  fs.readFile('./users-missing.json', function (err, d) {
+  fs.readFile('./data/users-missing.json', function (err, d) {
     if (err) {
       cb(err);
       return;
@@ -372,13 +372,13 @@ function findRepos(data, cb) {
 }
 
 function _saveRepos(data, cb) {
-  fs.writeFile('./_repos.json', JSON.stringify(data), function (err) {
+  fs.writeFile('./data/repos.json', JSON.stringify(data), function (err) {
     cb(err, data);
   });
 }
 
 function _readRepos(cb) {
-  fs.readFile('./_repos.json', function (err, d) {
+  fs.readFile('./data/repos.json', function (err, d) {
     if (err) {
       cb(err);
       return;
@@ -398,13 +398,13 @@ function getBlocks(repos, cb) {
 }
 
 function _saveBlocks(data, cb) {
-  fs.writeFile('./_blocks.json', JSON.stringify(data), function (err) {
+  fs.writeFile('./data/blocks.json', JSON.stringify(data), function (err) {
     cb(err, data);
   });
 }
 
 function _readBlocks(cb) {
-  fs.readFile('./_blocks.json', function (err, d) {
+  fs.readFile('./data/blocks.json', function (err, d) {
     if (err) {
       cb(err);
       return;

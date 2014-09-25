@@ -1,23 +1,25 @@
 {
-  "name": "intern",
+  "name": "CinderBlocks",
   "version": "0.0.0",
-  "description": "Crawl GitHub in search of CinderBlocks",
+  "description": "Directory of CinderBlocks",
+  "main": "app.js",
   "scripts": {
-    "postinstall": "gulp find:users"
+    "start": "node app.js",
+    "postinstall": "gulp find:users && gulp find:blocks"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/pizthewiz/CinderBlocks.org.git"
   },
   "dependencies": {
+    "express": "4.x",
+    "compression": "*",
     "request": "*",
     "cheerio": "*",
     "octonode": "*",
     "xml2js": "*",
     "async": "*",
-    "gulp": "*",
-    "gulp-awspublish": "*",
-    "gulp-rename": "*"
+    "gulp": "*"
   },
   "engines": {
     "node": "0.10.x"
