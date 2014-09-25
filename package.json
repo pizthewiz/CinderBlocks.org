@@ -1,7 +1,7 @@
 {
   "name": "CinderBlocks",
   "version": "0.0.0",
-  "description": "Directory of CinderBlocks",
+  "description": "Catalogue of CinderBlocks",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
