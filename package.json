@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "postinstall": "gulp find:users && gulp find:blocks"
+    "postinstall": "mkdir data && gulp find:users && gulp find:blocks"
   },
   "repository": {
     "type": "git",
