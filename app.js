@@ -2,12 +2,12 @@
 'use strict';
 
 var express = require('express');
-var compress = require('compression');
+var compression = require('compression');
 
 var app = express();
 
 app.set('port', (process.env.PORT || 5000));
-app.use(compress());
+app.use(compression());
 app.use(express.static(__dirname + '/public'));
 app.use('/data/blocks.json', express.static(__dirname + '/data/blocks.json'));
 
