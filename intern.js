@@ -306,6 +306,7 @@ function _saveUsers(data, cb) {
   }
 
   var filepath = path.join(__dirname, 'data/users.json');
+  console.log('writing users list to %s', filepath);
   fs.writeFile(filepath, JSON.stringify(data), function (err) {
     cb(err, data);
   });
@@ -318,6 +319,7 @@ function _readUsers(cb) {
     return;
   }
 
+  console.log('reading users list from %s', filepath);
   fs.readFile(filepath, function (err, d) {
     if (err) {
       cb(err);
@@ -338,6 +340,7 @@ function _addMissingUsers(data, cb) {
     return;
   }
 
+  console.log('reading missing users list from %s', filepath);
   fs.readFile(filepath, function (err, d) {
     if (err) {
       cb(err);
@@ -377,6 +380,7 @@ function findRepos(data, cb) {
 
 function _saveRepos(data, cb) {
   var filepath = path.join(__dirname, 'data/repos.json');
+  console.log('writing repos list to %s', filepath);
   fs.writeFile(filepath, JSON.stringify(data), function (err) {
     cb(err, data);
   });
@@ -384,6 +388,7 @@ function _saveRepos(data, cb) {
 
 function _readRepos(cb) {
   var filepath = path.join(__dirname, 'data/repos.json');
+  console.log('reading repos list from %s', filepath);
   fs.readFile(filepath, function (err, d) {
     if (err) {
       cb(err);
@@ -405,6 +410,7 @@ function getBlocks(repos, cb) {
 
 function _saveBlocks(data, cb) {
   var filepath = path.join(__dirname, 'data/blocks.json');
+  console.log('writing blocks list to %s', filepath);
   fs.writeFile(filepath, JSON.stringify(data), function (err) {
     cb(err, data);
   });
@@ -412,6 +418,7 @@ function _saveBlocks(data, cb) {
 
 function _readBlocks(cb) {
   var filepath = path.join(__dirname, 'data/blocks.json');
+  console.log('reading blocks list from %s', filepath);
   fs.readFile(filepath, function (err, d) {
     if (err) {
       cb(err);
