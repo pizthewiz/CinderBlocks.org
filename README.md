@@ -9,21 +9,21 @@ There are many things the project does not do, including but certainly not limit
 **NOTE**: The microsite is *entirely un-styled* at present.
 
 ### BLOCK DISCOVERY
-The block discovery mechanism is imperfect as the [GitHub API](https://developer.github.com/v3/) does not yet allow searching un-scoped code, and turn some a stratagem is used that could fail to find some blocks. Blocks are identified by the presence of a `cinderblock.xml`, which is what would be required by Cinder's project creation tool [TinderBox](http://libcinder.org/docs/welcome/TinderBox.html).
+The block discovery mechanism is imperfect as the [GitHub API](https://developer.github.com/v3/) does not yet allow searching un-scoped code and in turn, a stratagem is used that could fail to find some blocks. Blocks are identified by the presence of the file `cinderblock.xml`, which is what would be required by Cinder's project generation tool [TinderBox](http://libcinder.org/docs/welcome/TinderBox.html).
 
-The process occurs in two phases: (1) find all users with blocks (2-5) find all blocks for users.
-1. [GitHub.com Search results](https://github.com/search?p=1&q=cinderblock.xml+in%3Apath&type=Code) are scraped and the list of users compiled and stored on disk at *_users.json*
-2. If the file *users-missing.json* exists, its contents are appended to the in-memory user list
+The process occurs in two phases: (1-2) find all users with blocks (3-5) find all blocks for users.
+1. [GitHub.com Search results](https://github.com/search?p=1&q=cinderblock.xml+in%3Apath&type=Code) are scraped and the list of users compiled and stored on disk at *data/users.json*
+2. If the file *data/users-missing.json* exists, its contents are appended to the in-memory user list
 3. Each user is then searched for repositories with the file `cinderblock.xml`
 4. Repositories with more than one `cinderblock.xml` file are ignored
-5. Metadata is captured from several sources and fused to form
+5. Metadata is captured from several GitHub API edges and fused for our use
 
-The extra steps (2-3) result in a few more blocks than if only the repositories found via scraping were used from (1). Hopefully the [GitHub API](https://developer.github.com/v3/) exposes programatic un-scoped code searching at some point and this can be further improved and streamlined.
+Hopefully the [GitHub API](https://developer.github.com/v3/) exposes programatic un-scoped code searching at some point and this can be further improved and streamlined.
 
 ### DEVELOPMENT
-The repository contains two primary pieces, `app.js` and `intern.js`. `app.js` is a simple [Express](http://expressjs.com) application that simply serves static site content, there aren't any dynamic elements. `intern.js` is a [Node.js](http://nodejs.org) module that uses the [GitHub API](https://developer.github.com/v3/) (and web scraping) to discover blocks and fetch the associated metadata - `intern.js` is not used directly but via `gulp`. Both components are run on [Heroku](https://heroku.com).
+The repository contains two primary pieces, `app.js` and `intern.js`. `app.js` is a simple [Express](http://expressjs.com) application that simply serves static site content, there aren't any dynamic elements. `intern.js` is a [Node.js](http://nodejs.org) module that uses the [GitHub API](https://developer.github.com/v3/) (and web scraping) to discover users and blocks, and fetch the associated metadata - `intern.js` is not used directly but via `gulp`. Both components are run on [Heroku](https://heroku.com).
 
-The [GitHub API](https://developer.github.com/v3/)  request limit is much higher when authenticated. Create a developer application in your [GitHub User Applications](https://github.com/settings/applications/) settings and use them in the environment:
+The [GitHub API](https://developer.github.com/v3/) request limit is much higher when authenticated. Create a developer application in your [GitHub User Applications](https://github.com/settings/applications/) settings and use them in the environment:
 ```sh
 $ export GITHUB_ID=ID
 $ export GITHUB_SECRET=SECRET
@@ -36,7 +36,7 @@ $ gulp find:users && gulp find:blocks
 
 Typically the `find:blocks` task can be decoupled from and run more often than `find:users` as blocks are updated far more often than they are created.
 
-The static site can be run locally via:
+The static site served by `app.js` can be run locally via:
 ```sh
 $ npm start
 ```
