@@ -45,8 +45,8 @@ function scrapeSearchResultsPageForRepos(page, callback) {
       return;
     }
     if (res.statusCode != 200) {
-      if (res.statusCode == 420) {
-        setTimeout(function () { scrapeSearchResultsPageForRepos(page, callback); }, 15000);
+      if (res.statusCode == 420 || res.statusCode == 429) {
+        setTimeout(function () { scrapeSearchResultsPageForRepos(page, callback); }, 15 * 1000);
         console.log('search result scrape rate limited, waiting 15 s to retry');
       } else {
         var e = new Error('bad status code');
