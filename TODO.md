@@ -3,6 +3,7 @@
 - do something with forks
 
 ### WEB
+- reevaluate relative timing every minute?
 - use anchor to indicate sort and filter
 - style the page
 - fallback block image and colors
@@ -16,7 +17,7 @@
 - make sure /data/blocks.json is GZIP compressed
 
 ### GENERAL
-- point cinderblocks.org to Heroku web dyno
+- move blocks.json back to AWS as Heroku doesn't allow file writing
 
 ### LATER
 - consider persistant blocks_metadata.json for key-value metadata store
