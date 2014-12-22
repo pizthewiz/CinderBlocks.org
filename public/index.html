@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-ng-app="house">
+<html lang="en" data-ng-app="app">
   <head>
     <meta charset="utf-8">
     <title>CinderBlocks</title>
@@ -25,208 +25,17 @@
     </style>
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-route.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/controllers.js"></script>
   </head>
   <body>
     <header><h1>CinderBlocks</h1></header>
     <main role="main">
-      <div data-ng-controller="HouseController">
-        <section>
-          <div>Sort:
-            <a href="" data-ng-click="setPredicate('-created')">Created</a>
-            <a href="" data-ng-click="setPredicate('-commit.date')">Committed</a>
-            <a href="" data-ng-click="setPredicate('name')">Name</a>
-            <a href="" data-ng-click="setPredicate('-star_count', 'name')">Stars</a>
-            <a href="" data-ng-click="setPredicate('user.name', 'name')">User</a>
-          </div>
-          <div>Filter:
-            <a href="" data-ng-click="setFilter('macosx')">OS X</a>
-            <a href="" data-ng-click="setFilter('ios')">iOS</a>
-            <a href="" data-ng-click="setFilter('msw')">Windows</a>
-          </div>
-        </section>
-        <section>
-          <ol id="block-list">
-            <li data-ng-repeat="block in blocks | filter:filterFunc | orderBy:predicate">
-              <canvas width="72" height="72" data-image-url="{{::block.image_url}}" badge></canvas>
-              <h3><a href="{{::block.url}}">{{::block.name}}</a></h3>
-              <p>{{::block.description}}</p>
-              <p>
-                <a class="user" href="{{::block.user.url}}" rel="user"><img data-ng-src="{{::block.user.avatar_url}}s=140" alt="{{::block.user.name}}" width="24" height="24" class="avatar">{{::block.user.name}}</a> ·
-                Committed <time datetime="{{::block.commit.date}}" is="relative-time" title="{{::block.commit.date | date:'medium' }}">{{::block.commit.date | relativeTime}}</time> ·
-                ★ ({{::block.star_count}}) ·
-                <ng-pluralize count="::block.sample_count" when="{
-                    '1': '1 Sample',
-                    'other': '{} Samples'
-                  }">
-                </ng-pluralize>
-              </p>
-            </li>
-          </ol>
-        </section>
-      </div>
+      <div ng-view></div>
     </main>
     <footer>
       <h1>Made With 👏</h1>
     </footer>
-    <script>
-      (function () {
-        'use strict';
-        angular.module('house', [])
-          .controller('HouseController', ['$scope', '$http', function ($scope, $http) {
-            $scope.blocks = [];
-            $scope.filter = {supports: []};
-            $scope.predicate = ['-commit.date'];
-
-            $http({method: 'GET', url: '/data/blocks.json'})
-              .success(function(data, status, headers, config) {
-                $scope.blocks = data;
-              }).error(function(data, status, headers, config) {
-                // TODO - something?
-              });
-
-            $scope.setFilter = function (os) {
-              if ($scope.filter.supports.indexOf(os) !== -1) {
-                var index = $scope.filter.supports.indexOf(os);
-                $scope.filter.supports.splice(index, 1);
-              } else {
-                $scope.filter.supports = [os];
-              }
-            };
-
-            $scope.filterFunc = function (block) {
-              return $scope.filter.supports.every(function (os) {
-                return block.supports.indexOf(os) !== -1;
-              });
-            };
-
-            $scope.setPredicate = function (primary, secondary) {
-              var predicate = secondary ? [primary, secondary] : [primary];
-              if (JSON.stringify($scope.predicate) !== JSON.stringify(predicate)) {
-                $scope.predicate = predicate;
-              } else {
-                // reverse sort direction
-                var matches = $scope.predicate[0].match(/(\-)?(.*)/);
-                $scope.predicate[0] = (matches[1] === undefined ? '-' : '') + matches[2];
-              }
-            };
-          }])
-
-          .directive('badge', [function () {
-            return {
-              restrict: 'A',
-              // template: '<canvas></canvas>',
-              link: function (scope, element, attrs) {
-                var canvas = element[0];
-                var ctx = canvas.getContext('2d');
-
-                // hidpi handling
-                var devicePixelRatio = window.devicePixelRatio || 1;
-                var backingStoreRatio = ctx.backingStorePixelRatio ||
-                  ctx.webkitBackingStorePixelRatio ||
-                  ctx.mozBackingStorePixelRatio ||
-                  ctx.msBackingStorePixelRatio ||
-                  ctx.oBackingStorePixelRatio ||
-                  ctx.backingStorePixelRatio || 1;
-                if (devicePixelRatio !== backingStoreRatio) {
-                  var pixelRatio = devicePixelRatio / backingStoreRatio;
-
-                  canvas.style.width = '' + canvas.width + 'px';
-                  canvas.style.height = '' + canvas.height + 'px';
-
-                  canvas.width = canvas.width * pixelRatio;
-                  canvas.height = canvas.height * pixelRatio;
-                  ctx.scale(pixelRatio, pixelRatio);
-                }
-
-                var drawFallback = function () {
-                  var img = new Image();
-                  img.onerror = function () {
-                    ctx.fillStyle = 'rgb(255, 0, 0)';
-                    ctx.fillRect(0, 0, attrs.width, attrs.height);
-                  };
-                  img.onload = function () {
-                    ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, attrs.width, attrs.height);
-                    ctx.globalCompositeOperation = 'multiply';
-                    var colors = ['rgb(255, 255, 0)', 'rgb(255, 0, 255)', 'rgb(0, 255, 255)'];
-                    ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
-                    ctx.fillRect(0, 0, attrs.width, attrs.height);
-                  };
-                  img.src = 'img/block.png';
-                };
-
-                if (!attrs.imageUrl) {
-                  drawFallback();
-                } else {
-                  var img = new Image();
-                  img.onerror = function () {
-                    drawFallback();
-                  };
-                  img.onload = function () {
-                    // aspect fill and center
-                    var x = 0, y = 0, w = img.width, h = img.height;
-                    var aspectRatio = (img.width / img.height) / (attrs.width / attrs.height);
-                    if (aspectRatio > 1) {
-                      w /= aspectRatio;
-                      x = (img.width - w) / 2;
-                    } else if (aspectRatio < 1) {
-                      h *= aspectRatio;
-                      y = (img.height - h) / 2;
-                    }
-                    ctx.drawImage(img, x, y, w, h, 0, 0, attrs.width, attrs.height);
-                  };
-                  img.src = attrs.imageUrl;
-                }
-              }
-            };
-          }])
-
-          // based on https://github.com/wildlyinaccurate/angular-relative-date
-          .value('now', new Date())
-          .filter('relativeTime', ['now', function (now) {
-            return function (string) {
-              var date = new Date(string);
-              var delta = Math.round((now - date) / 1000);
-
-              var second = 1;
-              var minute = second * 60;
-              var hour = minute * 60;
-              var day = hour * 24;
-              var week = day * 7;
-              var month = day * 30;
-              var year = day * 365;
-
-              if (delta < second * 30) {
-                return 'just now';
-              } else if (delta < minute) {
-                return '' + delta + ' seconds ago';
-              } else if (delta < minute * 2) {
-                return 'a minute ago';
-              } else if (delta < hour) {
-                return '' + Math.floor(delta / minute) + ' minutes ago';
-              } else if (delta < hour * 2) {
-                return 'an hour ago';
-              } else if (delta < day) {
-                return '' + Math.floor(delta / hour) +  ' hours ago';
-              } else if (delta < day * 2) {
-                return 'a day ago';
-              } else if (delta < week) {
-                return '' + Math.floor(delta / day) +  ' days ago';
-              } else if (delta < week * 2) {
-                return 'a week ago';
-              } else if (delta < month) {
-                return '' + Math.floor(delta / week) +  ' weeks ago';
-              } else if (delta < month * 2) {
-                return 'a month ago';
-              } else if (delta < year) {
-                return '' + Math.floor(delta / month) +  ' months ago';
-              } else if (delta < year * 2) {
-                return 'a year ago';
-              } else {
-                return 'years ago';
-              }
-            };
-          }]);
-        })();
-    </script>
   </body>
 </html>
