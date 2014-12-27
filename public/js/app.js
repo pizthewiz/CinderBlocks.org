@@ -8,10 +8,10 @@
         templateUrl: 'partials/blocks.html',
         controller: 'BlocksController'
       }).
-      when('/blocks/:blockID', {
-        templateUrl: 'partials/block.html',
-        controller: 'BlockController'
-      }).
+      // when('/blocks/:blockID', {
+      //   templateUrl: 'partials/block.html',
+      //   controller: 'BlockController'
+      // }).
       otherwise({
         redirectTo: '/blocks'
       });
