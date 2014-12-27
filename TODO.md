@@ -4,14 +4,16 @@
 
 ### WEB
 - reevaluate relative timing every minute?
-- use anchor to indicate sort and filter
+- revisit relativeTime to round to the closer value 4 hours 50 minutes ago should probably just be 5, not 4
+- use anchor to indicate sort and base filter
+- offer on-page search, again dump into anchor
+- use Bower to install and manage angular and angular-route
 - style the page
 - fallback block image and colors
 - apple-touch-icon and favicon
 - analytics? [MixPanel's Partner Plan](https://mixpanel.com/free/) or [Amplitude](https://amplitude.com)?
 - add 404 and 500 error pages
 - add a simple about content with colophon and basic cinderblock info with links
-- revisit relativeTime to round to the closer value 4 hours 50 minutes ago should probably just be 5, not 4
 - check out the [angularjs-styleguide](https://github.com/johnpapa/angularjs-styleguide)
 - use referrer to limit access to /data/blocks.json
 - make sure /data/blocks.json is GZIP compressed
