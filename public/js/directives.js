@@ -3,12 +3,12 @@
 
   angular.module('appDirectives', []).
     directive('relativeTime', ['$timeout', function ($timeout) {
-      function update(scope, element, attrs) {
+      function update(element, attrs) {
         element.text(getRelativeDateTimeString(attrs.datetime));
 
         // update every 30 seconds
         $timeout(function () {
-          update(scope, element, attrs);
+          update(element, attrs);
         }, 30 * 1000);
       }
 
@@ -60,12 +60,57 @@
       return {
         restrict: 'A',
         link: function (scope, element, attrs) {
-          update(scope, element, attrs);
+          update(element, attrs);
         }
       };
     }]).
 
     directive('badge', [function () {
+      function draw(canvas, attrs) {
+        var context = canvas.getContext('2d');
+
+        // hidpi handling
+        var devicePixelRatio = window.devicePixelRatio || 1;
+        var backingStoreRatio = context.backingStorePixelRatio ||
+        context.webkitBackingStorePixelRatio ||
+        context.mozBackingStorePixelRatio ||
+        context.msBackingStorePixelRatio ||
+        context.oBackingStorePixelRatio ||
+        context.backingStorePixelRatio || 1;
+        if (devicePixelRatio !== backingStoreRatio) {
+          canvas.style.width = '' + canvas.width + 'px';
+          canvas.style.height = '' + canvas.height + 'px';
+
+          var pixelRatio = devicePixelRatio / backingStoreRatio;
+          canvas.width = canvas.width * pixelRatio;
+          canvas.height = canvas.height * pixelRatio;
+          context.scale(pixelRatio, pixelRatio);
+        }
+
+        if (!attrs.imageUrl) {
+          drawFallback(context, attrs);
+        } else {
+          var img = new Image();
+          img.onerror = function () {
+            drawFallback(context, attrs);
+          };
+          img.onload = function () {
+            // aspect fill and center
+            var x = 0, y = 0, w = img.width, h = img.height;
+            var aspectRatio = (img.width / img.height) / (attrs.width / attrs.height);
+            if (aspectRatio > 1) {
+              w /= aspectRatio;
+              x = (img.width - w) / 2;
+            } else if (aspectRatio < 1) {
+              h *= aspectRatio;
+              y = (img.height - h) / 2;
+            }
+            context.drawImage(img, x, y, w, h, 0, 0, attrs.width, attrs.height);
+          };
+          img.src = attrs.imageUrl;
+        }
+      }
+
       function drawFallback(context, attrs) {
         var img = new Image();
         img.onerror = function () {
@@ -86,49 +131,7 @@
         restrict: 'A',
         link: function (scope, element, attrs) {
           var canvas = element[0];
-          var context = canvas.getContext('2d');
-
-          // hidpi handling
-          var devicePixelRatio = window.devicePixelRatio || 1;
-          var backingStoreRatio = context.backingStorePixelRatio ||
-            context.webkitBackingStorePixelRatio ||
-            context.mozBackingStorePixelRatio ||
-            context.msBackingStorePixelRatio ||
-            context.oBackingStorePixelRatio ||
-            context.backingStorePixelRatio || 1;
-          if (devicePixelRatio !== backingStoreRatio) {
-            var pixelRatio = devicePixelRatio / backingStoreRatio;
-
-            canvas.style.width = '' + canvas.width + 'px';
-            canvas.style.height = '' + canvas.height + 'px';
-
-            canvas.width = canvas.width * pixelRatio;
-            canvas.height = canvas.height * pixelRatio;
-            context.scale(pixelRatio, pixelRatio);
-          }
-
-          if (!attrs.imageUrl) {
-            drawFallback(context, attrs);
-          } else {
-            var img = new Image();
-            img.onerror = function () {
-              drawFallback(context, attrs);
-            };
-            img.onload = function () {
-              // aspect fill and center
-              var x = 0, y = 0, w = img.width, h = img.height;
-              var aspectRatio = (img.width / img.height) / (attrs.width / attrs.height);
-              if (aspectRatio > 1) {
-                w /= aspectRatio;
-                x = (img.width - w) / 2;
-              } else if (aspectRatio < 1) {
-                h *= aspectRatio;
-                y = (img.height - h) / 2;
-              }
-              context.drawImage(img, x, y, w, h, 0, 0, attrs.width, attrs.height);
-            };
-            img.src = attrs.imageUrl;
-          }
+          draw(canvas, attrs);
         }
       };
     }]);
