@@ -75,13 +75,16 @@ function searchUser(user, callback) {
     // q: util.format('path:cinderblock.xml+user:%s', user)
   }, function (err, data, headers) {
     if (err) {
-      // retry after a delay if rate limited.
+      // check if rate limited and delay until retry
       // NB - oddly headers is not populated but in err.headers
       if (err.statusCode == 403 && parseInt(err.headers['x-ratelimit-remaining'], 10) === 0) {
-        var s = err.headers['x-ratelimit-reset'];
-        var ms = new Date(s * 1000) - new Date();
-        setTimeout(function () { searchUser(user, callback); }, ms);
-        console.log('code search rate limited, waiting %d ms to retry', ms);
+        var reset = new Date(err.headers['x-ratelimit-reset'] * 1000);
+        // use the server's Date if available, not the local machine
+        var now = err.headers['Date'] ? new Date(err.headers['Date']) : new Date();
+        var delay = reset - now;
+
+        setTimeout(function () { searchUser(user, callback); }, delay);
+        console.log('code search rate limited, waiting %d ms to retry', delay);
         return;
       } else {
         callback(err);
