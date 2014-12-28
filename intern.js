@@ -76,12 +76,11 @@ function searchUser(user, callback) {
   }, function (err, data, headers) {
     if (err) {
       // check if rate limited and delay until retry
-      // NB - oddly headers is not populated but in err.headers
       if (err.statusCode == 403 && parseInt(err.headers['x-ratelimit-remaining'], 10) === 0) {
         var reset = new Date(err.headers['x-ratelimit-reset'] * 1000);
-        // use the server's Date if available, not the local machine
+        // use server Date if available, though it is not super accurate
         var now = err.headers['Date'] ? new Date(err.headers['Date']) : new Date();
-        var delay = reset - now;
+        var delay = (reset - now) > 0 ? reset - now : 100;
 
         setTimeout(function () { searchUser(user, callback); }, delay);
         console.log('code search rate limited, waiting %d ms to retry', delay);
