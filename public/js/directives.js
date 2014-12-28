@@ -12,48 +12,44 @@
         }, 30 * 1000);
       }
 
-      // based on https://github.com/wildlyinaccurate/angular-relative-date
+      // based on GitHub's timeAgo formatter
       function getRelativeDateTimeString(string) {
         var now = new Date();
         var date = new Date(string);
-        var delta = Math.round((now - date) / 1000);
+        var milliseconds = now.getTime() - date.getTime();
+        var seconds = Math.round(milliseconds / 1000);
+        var minutes = Math.round(seconds / 60);
+        var hours = Math.round(minutes / 60);
+        var days = Math.round(hours / 24);
+        var months = Math.round(days / 30);
+        var years = Math.round(months / 12);
 
-        var second = 1;
-        var minute = second * 60;
-        var hour = minute * 60;
-        var day = hour * 24;
-        var week = day * 7;
-        var month = day * 30;
-        var year = day * 365;
-
-        if (delta < second * 30) {
+        if (0 > milliseconds) {
           return 'just now';
-        } else if (delta < minute) {
-          return '' + delta + ' seconds ago';
-        } else if (delta < minute * 2) {
+        } else if (10 > seconds) {
+          return 'just now';
+        } else if (45 > seconds) {
+          return seconds + ' seconds ago';
+        } else if (90 > seconds) {
           return 'a minute ago';
-        } else if (delta < hour) {
-          return '' + Math.floor(delta / minute) + ' minutes ago';
-        } else if (delta < hour * 2) {
+        } else if (45 > minutes) {
+          return minutes + ' minutes ago';
+        } else if (90 > minutes) {
           return 'an hour ago';
-        } else if (delta < day) {
-          return '' + Math.floor(delta / hour) +  ' hours ago';
-        } else if (delta < day * 2) {
+        } else if (24 > hours) {
+          return hours + ' hours ago';
+        } else if (36 > hours) {
           return 'a day ago';
-        } else if (delta < week) {
-          return '' + Math.floor(delta / day) +  ' days ago';
-        } else if (delta < week * 2) {
-          return 'a week ago';
-        } else if (delta < month) {
-          return '' + Math.floor(delta / week) +  ' weeks ago';
-        } else if (delta < month * 2) {
+        } else if (30 > days) {
+          return days + ' days ago';
+        } else if (45 > days) {
           return 'a month ago';
-        } else if (delta < year) {
-          return '' + Math.floor(delta / month) +  ' months ago';
-        } else if (delta < year * 2) {
+        } else if (12 > months) {
+          return months + ' months ago';
+        } else if (18 > months) {
           return 'a year ago';
         } else {
-          return 'years ago';
+          return years + ' years ago';
         }
       }
 
