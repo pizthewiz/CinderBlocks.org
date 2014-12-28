@@ -3,7 +3,6 @@
 - do something with forks
 
 ### WEB
-- reevaluate relative timing every minute?
 - revisit relativeTime to round to the closer value 4 hours 50 minutes ago should probably just be 5, not 4
 - use anchor to indicate sort and base filter
 - offer on-page search, again dump into anchor

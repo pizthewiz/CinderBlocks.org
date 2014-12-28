@@ -21,8 +21,8 @@
         <p>{{::block.description}}</p>
         <p>
           <a class="user" href="{{::block.user.url}}" rel="user"><img data-ng-src="{{::block.user.avatar_url}}s=140" alt="{{::block.user.name}}" width="24" height="24" class="avatar">{{::block.user.name}}</a> ·
-          Committed <time datetime="{{::block.commit.date}}" is="relative-time" title="{{::block.commit.date | date:'medium' }}">{{::block.commit.date | relativeTime}}</time> ·
-          ★ ({{::block.star_count}}) ·
+          Committed <time datetime="{{::block.commit.date}}" title="{{::block.commit.date | date:'medium' }}" relative-time></time> ·
+★ ({{::block.star_count}}) ·
           <ng-pluralize count="::block.sample_count" when="{
             '1': '1 Sample',
             'other': '{} Samples'
