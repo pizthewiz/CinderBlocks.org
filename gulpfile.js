@@ -3,7 +3,16 @@
 
 var gulp = require('gulp');
 
+var connect = require('gulp-connect');
+
 var intern = require('./intern.js');
+
+gulp.task('connect', function () {
+  connect.server({
+    root: 'app/',
+    port: 8888
+  });
+});
 
 // intern
 gulp.task('find:users', function (cb) {
