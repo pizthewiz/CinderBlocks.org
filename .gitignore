@@ -7,4 +7,5 @@ bower_components/
 data/
 !data/users-missing.json
 
+app/data
 dist/
