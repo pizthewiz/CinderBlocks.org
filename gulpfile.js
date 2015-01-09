@@ -8,25 +8,24 @@ var connect = require('gulp-connect');
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
 var minifyCSS = require('gulp-minify-css');
-var clean = require('gulp-clean');
+var del = require('del');
 
-gulp.task('lint', function() {
+gulp.task('lint', function () {
   gulp.src(['./app/**/*.js', '!./app/bower_components/**']).
     pipe(jshint()).
     pipe(jshint.reporter('default')).
     pipe(jshint.reporter('fail'));
 });
-gulp.task('clean', function() {
-  gulp.src('./dist/*').
-    pipe(clean({force: true}));
+gulp.task('clean', function (cb) {
+  del(['dist/*', '!dist/data'], cb);
 });
-gulp.task('minify-css', function() {
+gulp.task('minify-css', function () {
   var opts = {comments: true, spare: true};
   gulp.src(['./app/**/*.css', '!./app/bower_components/**']).
     pipe(minifyCSS(opts)).
     pipe(gulp.dest('./dist/'));
 });
-gulp.task('minify-js', function() {
+gulp.task('minify-js', function () {
   gulp.src(['./app/**/*.js', '!./app/bower_components/**']).
     pipe(uglify({
       // inSourceMap:
