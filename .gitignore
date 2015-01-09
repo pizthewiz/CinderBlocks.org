@@ -1,7 +1,8 @@
 .DS_Store
 
-node_modules
+node_modules/
+bower_components/
 .env
 
-data
+data/
 !data/users-missing.json
