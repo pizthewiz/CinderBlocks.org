@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "postinstall": "mkdir data && mkdir dist && ln -s data/ app/data && ln -s data/ dist/data"
+    "postinstall": "mkdir data && mkdir dist && ln -s `{pwd}`/data/ app/data && ln -s `{pwd}`/data/ dist/data"
   },
   "repository": {
     "type": "git",
