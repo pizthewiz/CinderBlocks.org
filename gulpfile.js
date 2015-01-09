@@ -42,8 +42,12 @@ gulp.task('copy-html-files', function () {
   gulp.src('./app/**/*.html')
   .pipe(gulp.dest('dist/'));
 });
-gulp.task('copy-images', function () {
-  gulp.src('./app/**/*.{png,svg,ico}')
+gulp.task('copy-image-files', function () {
+  gulp.src('./app/**/*.{png}')
+  .pipe(gulp.dest('dist/'));
+});
+gulp.task('copy-text-files', function () {
+  gulp.src('./app/**/*.txt')
   .pipe(gulp.dest('dist/'));
 });
 gulp.task('connect', function () {
@@ -63,7 +67,7 @@ gulp.task('default',
   ['lint', 'connect']
 );
 gulp.task('build',
-  ['lint', 'minify-css', 'minify-js', 'copy-bower-components', 'copy-html-files', 'copy-images', 'connectDist']
+  ['lint', 'minify-css', 'minify-js', 'copy-bower-components', 'copy-html-files', 'copy-image-files', 'copy-text-files', 'connectDist']
 );
 
 // intern
