@@ -3,6 +3,7 @@
 - do something with forks
 
 ### WEB
+- consider gulp-sourcemaps and gulp-usemin
 - use anchor to indicate sort and base filter
 - offer on-page search, again dump into anchor
 - use Bower to install and manage angular and angular-route
