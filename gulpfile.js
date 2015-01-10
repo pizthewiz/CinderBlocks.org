@@ -1,4 +1,4 @@
-/*jshint node:true, strict:false */
+/*jshint node:true */
 'use strict';
 
 var gulp = require('gulp');
@@ -8,8 +8,8 @@ var connect = require('gulp-connect');
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
 var minifyCSS = require('gulp-minify-css');
-var del = require('del');
 
+var del = require('del');
 gulp.task('lint', function () {
   gulp.src(['./app/**/*.js', '!./app/bower_components/**']).
     pipe(jshint()).
