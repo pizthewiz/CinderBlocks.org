@@ -6,10 +6,10 @@ var gulp = require('gulp');
 // site
 var connect = require('gulp-connect');
 var jshint = require('gulp-jshint');
-var uglify = require('gulp-uglify');
-var minifyCSS = require('gulp-minify-css');
-
 var del = require('del');
+var minifyCSS = require('gulp-minify-css');
+var uglify = require('gulp-uglify');
+
 gulp.task('lint', function () {
   gulp.src(['./app/**/*.js', '!./app/bower_components/**']).
     pipe(jshint()).
