@@ -2,10 +2,8 @@
   "name": "CinderBlocks",
   "version": "0.0.0",
   "description": "Catalogue of CinderBlocks",
-  "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "postinstall": "mkdir data && mkdir dist && ln -s `{pwd}`/data/ app/data && ln -s `{pwd}`/data/ dist/data"
+    "postinstall": "([ -d data ] || mkdir data) && ([ -d dist ] || mkdir dist) && ([ -d app/data ] || ln -s `pwd`/data app/data) && ([ -d dist/data ] || ln -s `pwd`/data dist/data)"
   },
   "repository": {
     "type": "git",
