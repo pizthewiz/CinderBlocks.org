@@ -16,13 +16,12 @@ var awspublish = require('gulp-awspublish');
 
 var intern = require('./intern.js');
 
-var options = {
+var publishOptions = {
   key: process.env.AWS_ACCESS_KEY_ID,
   secret: process.env.AWS_SECRET_ACCESS_KEY,
   region: 'us-west-1',
   bucket: 'cinderblocks-org'
 };
-var publisher = awspublish.create(options);
 
 // site
 gulp.task('lint', function () {
@@ -83,6 +82,7 @@ gulp.task('publish', ['build'], function (cb) {
     return;
   }
 
+  var publisher = awspublish.create(publishOptions);
   return gulp.src(['./dist/**', '!dist/data']).
     pipe(awspublish.gzip()).
     pipe(publisher.publish()).
@@ -120,6 +120,7 @@ gulp.task('publish:data', function (cb) {
     return;
   }
 
+  var publisher = awspublish.create(publishOptions);
   return gulp.src('./data/*.json').
     pipe(rename(function (path) {
       path.dirname += '/data';
