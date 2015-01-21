@@ -3,7 +3,7 @@
 - do something with forks
 
 ### WEB
-- check out gulp-awspublish-router to publish static site to AWS
+- check out gulp-awspublish-router to more closely control AWS publishing
 - use anchor to indicate sort and base filter
 - offer on-page search, again dump into anchor
 - style the page
@@ -14,10 +14,8 @@
 - add a simple about content with colophon and basic cinderblock info with links
 - check out the [angularjs-styleguide](https://github.com/johnpapa/angularjs-styleguide)
 - use referrer to limit access to /data/blocks.json
-- make sure /data/blocks.json is GZIP compressed
 
 ### GENERAL
-- move blocks.json back to AWS as Heroku doesn't allow file writing
 
 ### LATER
 - consider persistant blocks_metadata.json for key-value metadata store
