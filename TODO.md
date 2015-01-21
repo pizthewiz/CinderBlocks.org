@@ -3,7 +3,7 @@
 - do something with forks
 
 ### WEB
-- consider concat JS and CSS, gulp-sourcemaps and gulp-usemin
+- check out gulp-awspublish and gulp-awspublish-router to publish static site to AWS
 - use anchor to indicate sort and base filter
 - offer on-page search, again dump into anchor
 - style the page
