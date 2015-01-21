@@ -77,7 +77,7 @@ gulp.task('publish', ['build'], function (cb) {
     key: process.env.AWS_ACCESS_KEY_ID,
     secret: process.env.AWS_SECRET_ACCESS_KEY,
     region: 'us-west-1',
-    bucket: 'cinderblocks.org'
+    bucket: 'cinderblocks-org'
   };
   var publisher = awspublish.create(options);
 
@@ -124,7 +124,7 @@ gulp.task('publish:data', function (cb) {
     key: process.env.AWS_ACCESS_KEY_ID,
     secret: process.env.AWS_SECRET_ACCESS_KEY,
     region: 'us-west-1',
-    bucket: 'cinderblocks.org'
+    bucket: 'cinderblocks-org'
   };
   var publisher = awspublish.create(options);
 
