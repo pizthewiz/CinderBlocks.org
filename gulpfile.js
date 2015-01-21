@@ -12,6 +12,7 @@ var minifyHTML = require('gulp-minify-html');
 var minifyCSS = require('gulp-minify-css');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
+var rename = require('gulp-rename');
 var awspublish = require('gulp-awspublish');
 
 gulp.task('lint', function () {
@@ -111,4 +112,28 @@ gulp.task('find:blocks', function (cb) {
 
     cb();
   });
+});
+gulp.task('publish:data', function (cb) {
+  if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+    var e = new Error('both AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY must be defined');
+    cb(e);
+    return;
+  }
+
+  var options = {
+    key: process.env.AWS_ACCESS_KEY_ID,
+    secret: process.env.AWS_SECRET_ACCESS_KEY,
+    region: 'us-west-1',
+    bucket: 'cinderblocks.org'
+  };
+  var publisher = awspublish.create(options);
+
+  return gulp.src('./data/*.json').
+    pipe(rename(function (path) {
+      path.dirname += '/data';
+    })).
+    pipe(awspublish.gzip()).
+    pipe(publisher.publish()).
+    // pipe(publisher.cache()).
+    pipe(awspublish.reporter());
 });
