@@ -51,7 +51,7 @@ gulp.task('connect', function () {
     port: 8888
   });
 });
-gulp.task('connectDist', function () {
+gulp.task('connect-dist', function () {
   connect.server({
     root: 'dist/',
     port: 9999
