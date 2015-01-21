@@ -3,7 +3,6 @@
 
 var gulp = require('gulp');
 
-// site
 var connect = require('gulp-connect');
 var jshint = require('gulp-jshint');
 var del = require('del');
@@ -15,6 +14,17 @@ var concat = require('gulp-concat');
 var rename = require('gulp-rename');
 var awspublish = require('gulp-awspublish');
 
+var intern = require('./intern.js');
+
+var options = {
+  key: process.env.AWS_ACCESS_KEY_ID,
+  secret: process.env.AWS_SECRET_ACCESS_KEY,
+  region: 'us-west-1',
+  bucket: 'cinderblocks-org'
+};
+var publisher = awspublish.create(options);
+
+// site
 gulp.task('lint', function () {
   gulp.src(['./app/**/*.js', '!./app/bower_components/**']).
     pipe(jshint()).
@@ -73,14 +83,6 @@ gulp.task('publish', ['build'], function (cb) {
     return;
   }
 
-  var options = {
-    key: process.env.AWS_ACCESS_KEY_ID,
-    secret: process.env.AWS_SECRET_ACCESS_KEY,
-    region: 'us-west-1',
-    bucket: 'cinderblocks-org'
-  };
-  var publisher = awspublish.create(options);
-
   return gulp.src(['./dist/**', '!dist/data']).
     pipe(awspublish.gzip()).
     pipe(publisher.publish()).
@@ -89,8 +91,6 @@ gulp.task('publish', ['build'], function (cb) {
 });
 
 // intern
-var intern = require('./intern.js');
-
 gulp.task('find:users', function (cb) {
   intern.findUsers(function (err, data) {
     if (err) {
@@ -119,14 +119,6 @@ gulp.task('publish:data', function (cb) {
     cb(e);
     return;
   }
-
-  var options = {
-    key: process.env.AWS_ACCESS_KEY_ID,
-    secret: process.env.AWS_SECRET_ACCESS_KEY,
-    region: 'us-west-1',
-    bucket: 'cinderblocks-org'
-  };
-  var publisher = awspublish.create(options);
 
   return gulp.src('./data/*.json').
     pipe(rename(function (path) {
