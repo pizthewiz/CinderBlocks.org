@@ -11,39 +11,78 @@ There are many things the project does not do, including but certainly not limit
 ### BLOCK DISCOVERY
 The block discovery mechanism is imperfect as the [GitHub API](https://developer.github.com/v3/) does not yet allow searching un-scoped code and in turn, a stratagem is used that could fail to find some blocks. Blocks are identified by the presence of the file `cinderblock.xml`, which is what would be required by Cinder's project generation tool [TinderBox](http://libcinder.org/docs/welcome/TinderBox.html).
 
-The process occurs in two phases: (1-2) find all users with blocks (3-5) find all blocks for users.
-1. [GitHub.com Search results](https://github.com/search?p=1&q=cinderblock.xml+in%3Apath&type=Code) are scraped and the list of users compiled and stored on disk at *data/users.json*
-2. If the file *data/users-missing.json* exists, its contents are appended to the in-memory user list
+The discovery process occurs in two primary phases: first to find all users with blocks (steps 1-2) and the second, find all blocks for the given users (steps 3-5).
+1. [GitHub.com Search results](https://github.com/search?p=1&q=cinderblock.xml+in%3Apath&type=Code) are scraped and the list of users compiled
+2. The in-memory user list appends the contents of *data/users-missing.json* if present
 3. Each user is then searched for repositories with the file `cinderblock.xml`
 4. Repositories with more than one `cinderblock.xml` file are ignored
-5. Metadata is captured from several GitHub API edges and fused for our use
+5. Metadata is captured and fused from several GitHub API edges
 
 Hopefully the [GitHub API](https://developer.github.com/v3/) exposes programatic un-scoped code searching at some point and this can be further improved and streamlined.
 
 ### DEVELOPMENT
-The repository contains two primary pieces, `app.js` and `intern.js`. `app.js` is a simple [Express](http://expressjs.com) application that simply serves static site content, there aren't any dynamic elements. `intern.js` is a [Node.js](http://nodejs.org) module that uses the [GitHub API](https://developer.github.com/v3/) (and web scraping) to discover users and blocks, and fetch the associated metadata - `intern.js` is not used directly but via `gulp`. Both components are run on [Heroku](https://heroku.com).
+The repository contains two pieces, `app` and `intern.js`. The microsite is contained within the `app` folder and uses  [Bower](http://bower.io) to install and manage library dependencies. `intern.js` is a [Node.js](http://nodejs.org) module that uses the [GitHub API](https://developer.github.com/v3/) (and web scraping) for block discovery.
+
+#### SETUP
+[Node.js](http://nodejs.org), it's package manager [npm](https://www.npmjs.com/) and [Bower](http://bower.io) are required for development. Once the repo has been cloned, install the project dependencies:
+```sh
+$ npm install && bower install
+```
+
+#### MICROSITE
+The microsite is a pretty basic [Angular.js](https://angularjs.org/) app with the source contained within the `app`. Local development is made a bit easier through a series of `gulp` commands. A built-in webserver can be launched running the app source via:
+
+```sh
+$ gulp connect
+```
+
+Before publishing the microsite, the app HTML, JavaScript and CSS are minified and in some cases concatenated into the *dist* folder, reducing file sizes and the number of remote fetches. Similar to running the app source directly, a `gulp` task can be used to launch the built version:
+
+```sh
+$ gulp build && gulp connect-dist
+```
+
+The microsite is hosted via AWS S3 and a few environment variables are used to hold AWS credentials:
+
+```sh
+$ export AWS_ACCESS_KEY_ID=ID
+$ export AWS_SECRET_ACCESS_KEY=SECRET
+```
+
+Yet another `gulp` task is used to publish the built version of the microsite, the *dist* output, to AWS:
+
+```sh
+$ gulp publish
+```
+
+The envinroment variables can be placed into the `git`-ignored file *.env* and tasks launched via [`foreman`](http://ddollar.github.io/foreman/) which will execute the command with the ENV variables set.
+
+```sh
+$ foreman run gulp publish
+```
+
+#### EXPLORER
+The `intern.js` CinderBlock explorer module is hosted on [Heroku](https://heroku.com) and runs periodically to update the block list.
 
 The [GitHub API](https://developer.github.com/v3/) request limit is much higher when authenticated. Create a developer application in your [GitHub User Applications](https://github.com/settings/applications/) settings and use them in the environment:
+
 ```sh
 $ export GITHUB_ID=ID
 $ export GITHUB_SECRET=SECRET
 ```
 
-`gulp` tasks are used for the discovery process:
+Two `gulp` tasks are used for the discovery process:
+
 ```sh
 $ gulp find:users && gulp find:blocks
 ```
 
 Typically the `find:blocks` task can be decoupled from and run more often than `find:users` as blocks are updated far more often than they are created.
 
-The static site served by `app.js` can be run locally via:
-```sh
-$ npm start
-```
+The resulting data can then be published to AWS for use by the microsite via:
 
-The envinroment variables can be placed into a file *.env* and the tasks launched via [`foreman`](http://ddollar.github.io/foreman/) which will execute with the ENV set.
 ```sh
-$ foreman run gulp find:blocks
+$ gulp publish:data
 ```
 
 ---
