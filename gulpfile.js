@@ -121,7 +121,7 @@ gulp.task('publish:data', function (cb) {
   }
 
   var publisher = awspublish.create(publishOptions);
-  return gulp.src('./data/*.json').
+  return gulp.src('./data/blocks.json').
     pipe(rename(function (path) {
       path.dirname += '/data';
     })).
