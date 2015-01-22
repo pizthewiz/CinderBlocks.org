@@ -74,7 +74,7 @@ $ export GITHUB_SECRET=SECRET
 Two `gulp` tasks are used for the discovery process:
 
 ```sh
-$ gulp find:users && gulp find:blocks
+$ gulp find-users && gulp find-blocks
 ```
 
 Typically the `find:blocks` task can be decoupled from and run more often than `find:users` as blocks are updated far more often than they are created.
@@ -82,7 +82,7 @@ Typically the `find:blocks` task can be decoupled from and run more often than `
 The resulting data can then be published to AWS for use by the microsite via:
 
 ```sh
-$ gulp publish:data
+$ gulp publish-data
 ```
 
 ---

@@ -91,7 +91,7 @@ gulp.task('publish', ['build'], function (cb) {
 });
 
 // intern
-gulp.task('find:users', function (cb) {
+gulp.task('find-users', function (cb) {
   intern.findUsers(function (err, data) {
     if (err) {
       console.error(err);
@@ -102,7 +102,7 @@ gulp.task('find:users', function (cb) {
     cb();
   });
 });
-gulp.task('find:blocks', function (cb) {
+gulp.task('find-blocks', function (cb) {
   intern.findBlocks(function (err, data) {
     if (err) {
       console.error(err);
@@ -113,7 +113,7 @@ gulp.task('find:blocks', function (cb) {
     cb();
   });
 });
-gulp.task('publish:data', function (cb) {
+gulp.task('publish-blocks', function (cb) {
   if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
     var e = new Error('both AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY must be defined');
     cb(e);
