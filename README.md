@@ -82,7 +82,7 @@ Typically the `find:blocks` task can be decoupled from and run more often than `
 The resulting data can then be published to AWS for use by the microsite via:
 
 ```sh
-$ gulp publish-data
+$ gulp publish-blocks
 ```
 
 ---

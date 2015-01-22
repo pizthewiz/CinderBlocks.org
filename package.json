@@ -6,7 +6,7 @@
     "postinstall": "npm run create-dirs && npm run symlink-data",
     "create-dirs": "([ -d data ] || mkdir data) && ([ -d dist ] || mkdir dist)",
     "symlink-data": "([ -d app/data ] || ln -s `pwd`/data app/data) && ([ -d dist/data ] || ln -s `pwd`/data dist/data)",
-    "block-explorer": "gulp find-users && gulp find-blocks && gulp publish-data"
+    "block-explorer": "gulp find-users && gulp find-blocks && gulp publish-blocks"
   },
   "repository": {
     "type": "git",
