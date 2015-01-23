@@ -20,7 +20,7 @@ var publishOptions = {
   key: process.env.AWS_ACCESS_KEY_ID,
   secret: process.env.AWS_SECRET_ACCESS_KEY,
   region: 'us-west-1',
-  bucket: 'cinderblocks-org'
+  bucket: 'cinderblocks.org'
 };
 
 // site
