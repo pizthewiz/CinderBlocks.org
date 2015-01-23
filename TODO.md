@@ -3,12 +3,13 @@
 - do something with forks
 
 ### WEB
-- check out gulp-awspublish-router to more closely control AWS publishing
+- use gulp-awspublish-router to more closely control AWS publishing
+- load only the images that are visible in the scroll region?
+- create placeholder favicon.ico and apple-touch-icon
 - use anchor to indicate sort and base filter
 - offer on-page search, again dump into anchor
 - style the page
 - fallback block image and colors
-- apple-touch-icon and favicon
 - analytics? [MixPanel's Partner Plan](https://mixpanel.com/free/) or [Amplitude](https://amplitude.com)?
 - add 404 and 500 error pages
 - add a simple about content with colophon and basic cinderblock info with links
