@@ -26,7 +26,8 @@
 
       $scope.filterFunc = function (block) {
         return $scope.filter.supports.every(function (os) {
-          return block.supports.indexOf(os) !== -1;
+          // if whitelisted or if without a whitelist
+          return block.supports.indexOf(os) !== -1 || block.supports.length === 0;
         });
       };
 
