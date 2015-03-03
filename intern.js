@@ -287,7 +287,7 @@ function scrape(cb) {
 function _uniqueUsersForRepos(data, cb) {
   var results = data.map(function (fullname) {
     // USER/REPO to USER
-    return /([\w-]+)\/[\w-]+$/.exec(fullname)[1];
+    return /([\w-]+)\/.+$/.exec(fullname)[1];
   }).filter(function (elem, idx, array) {
     // unique users
     return array.indexOf(elem) == idx;
