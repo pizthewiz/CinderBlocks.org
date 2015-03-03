@@ -61,7 +61,7 @@ function scrapeSearchResultsPageForRepos(page, callback) {
     $('div.code-list-item').each(function () {
       var href = $(this).find('p.title a').attr('href');
       // trim to fullname, USER/REPO
-      var fullname = /\/?([\w-]+\/[\w-]+)$/.exec(href)[1];
+      var fullname = /\/?([\w-]+\/.+)$/.exec(href)[1];
       repos.push(fullname);
     });
 
