@@ -20,7 +20,7 @@
         <h3><a href="{{::block.url}}">{{::block.name}}</a></h3>
         <p>{{::block.description}}</p>
         <p>
-          <a class="user" href="{{::block.user.url}}" rel="user"><img data-ng-src="{{::block.user.avatar_url}}s=140" alt="{{::block.user.name}}" width="24" height="24" class="avatar">{{::block.user.name}}</a> ·
+          <img data-ng-src="{{::block.user.avatar_url}}&s=40" alt="@{{::block.user.name}}" width="20" height="20" class="avatar"> <a class="user" href="{{::block.user.url}}" rel="user">{{::block.user.name}}</a> ·
           Committed <time datetime="{{::block.commit.date}}" title="{{::block.commit.date | date:'medium' }}" relative-time></time> ·
 ★ ({{::block.star_count}}) ·
           <ng-pluralize count="::block.sample_count" when="{
