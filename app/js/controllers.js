@@ -6,6 +6,7 @@
       $scope.blocks = [];
       $scope.filter = {supports: []};
       $scope.predicate = ['-commit.date'];
+      $scope.isSortingByCreationDate = false;
 
       $http({method: 'GET', url: '/data/blocks.json'}).
         success(function(data, status, headers, config) {
@@ -40,6 +41,8 @@
           var matches = $scope.predicate[0].match(/(\-)?(.*)/);
           $scope.predicate[0] = (matches[1] === undefined ? '-' : '') + matches[2];
         }
+
+        $scope.isSortingByCreationDate = primary.indexOf('created') != -1;
       };
     }]).
 
