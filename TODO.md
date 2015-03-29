@@ -1,5 +1,6 @@
 
 ### WEB
+- dump gulp-usemin given issues and lack of support
 - add a simple about content with colophon and basic cinderblock info with links
 - create placeholder favicon.ico and apple-touch-icon
 - add 404 and 500 error pages
