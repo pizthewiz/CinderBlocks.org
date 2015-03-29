@@ -33,9 +33,9 @@ gulp.task('lint', function () {
 gulp.task('clean', function (cb) {
   del(['dist/*', '!dist/data'], cb);
 });
-// NB - only one file can be processed https://github.com/zont/gulp-usemin/issues/91
-gulp.task('usemin-index', function () {
-  gulp.src('./app/index.html').
+// NB - use gulp-usemin 0.3.8 to avoid https://github.com/zont/gulp-usemin/issues/91
+gulp.task('usemin', function () {
+  gulp.src('./app/**/*.html').
     pipe(usemin({
       css: [minifyCSS(), 'concat'],
       html: [minifyHTML({empty: true})],
@@ -43,10 +43,6 @@ gulp.task('usemin-index', function () {
       jsX: [uglify(), 'concat']
     })).
     pipe(gulp.dest('dist/'));
-});
-gulp.task('copy-html-files', function () {
-  gulp.src(['./app/**/*.html', '!./app/*.html']).
-  pipe(gulp.dest('dist/'));
 });
 gulp.task('copy-image-files', function () {
   gulp.src(['./app/**/*.{png,ico}', '!./app/bower_components/**']).
@@ -73,7 +69,7 @@ gulp.task('default',
   ['lint', 'connect']
 );
 gulp.task('build',
-  ['lint', 'usemin-index', 'copy-html-files', 'copy-image-files', 'copy-text-files']
+  ['lint', 'usemin', 'copy-image-files', 'copy-text-files']
 );
 gulp.task('publish', ['build'], function (cb) {
   if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {

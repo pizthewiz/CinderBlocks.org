@@ -29,7 +29,7 @@
     "gulp-minify-html": "^0.1.8",
     "gulp-rename": "^1.2.0",
     "gulp-uglify": "^1.0.2",
-    "gulp-usemin": "0.3.9"
+    "gulp-usemin": "0.3.8"
   },
   "engines": {
     "node": "0.10.x"
