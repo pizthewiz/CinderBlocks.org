@@ -6,6 +6,7 @@
 - add 404 and 500 error pages
 - use anchor to indicate sort and base filter
 - offer on-page search, again dump into anchor
+- use a sliding scale for relativeTime directive
 - style the page
 - fallback block image and colors
 - use gulp-awspublish-router to more closely control AWS publishing
