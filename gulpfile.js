@@ -38,7 +38,7 @@ gulp.task('usemin', function () {
   gulp.src('./app/**/*.html').
     pipe(usemin({
       css: [minifyCSS(), 'concat'],
-      html: [minifyHTML({empty: true})],
+      html: [minifyHTML({empty: true, loose: true})],
       js: [uglify(), 'concat'],
       jsX: [uglify(), 'concat']
     })).
