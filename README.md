@@ -12,11 +12,12 @@ There are many things the project does not do, including but certainly not limit
 The block discovery mechanism is imperfect as the [GitHub API](https://developer.github.com/v3/) does not yet allow searching un-scoped code and in turn, a stratagem is used that could fail to find some blocks. Blocks are identified by the presence of the file `cinderblock.xml`, which is what would be required by Cinder's project generation tool [TinderBox](http://libcinder.org/docs/welcome/TinderBox.html).
 
 The discovery process occurs in two primary phases: first to find all users with blocks (steps 1-2) and the second, find all blocks for the given users (steps 3-5).
+
 1. [GitHub.com Search results](https://github.com/search?p=1&q=cinderblock.xml+in%3Apath&type=Code) are scraped and the list of users compiled
-2. The in-memory user list appends the contents of *data/users-missing.json* if present
+2. The in-memory user list appends the contents of `data/users-missing.json` if present
 3. Each user is then searched for repositories with the file `cinderblock.xml`
 4. Repositories with more than one `cinderblock.xml` file are ignored
-5. Metadata is captured and fused from several GitHub API edges
+5. Metadata is captured and fused from several GitHub API edges as well as `cinderblock.xml`
 
 Hopefully the [GitHub API](https://developer.github.com/v3/) exposes programatic un-scoped code searching at some point and this can be further improved and streamlined.
 
@@ -30,7 +31,7 @@ $ npm install && bower install
 ```
 
 #### MICROSITE
-The microsite is a pretty basic [Angular.js](https://angularjs.org/) app with the source contained within the `app`. Local development is made a bit easier through a series of `gulp` commands. A built-in webserver can be launched running the app source via:
+The microsite is a pretty basic [Angular.js](https://angularjs.org/) app with the source contained within the `app` folder. Local development is made a bit easier through a series of `gulp` commands. A built-in webserver can be launched running the app source via:
 
 ```sh
 $ gulp connect
@@ -62,9 +63,9 @@ $ foreman run gulp publish
 ```
 
 #### EXPLORER
-The `intern.js` CinderBlock explorer module is hosted on [Heroku](https://heroku.com) and runs periodically to update the block list.
+In production use, the `intern.js` CinderBlock explorer module is hosted on [Heroku](https://heroku.com) and runs periodically to update the block list.
 
-The [GitHub API](https://developer.github.com/v3/) request limit is much higher when authenticated. Create a developer application in your [GitHub User Applications](https://github.com/settings/applications/) settings and use them in the environment:
+The [GitHub API](https://developer.github.com/v3/) request limit is much higher when authenticated, so please create a developer application in your [GitHub User Applications](https://github.com/settings/applications/) settings and use them in the environment:
 
 ```sh
 $ export GITHUB_ID=ID
@@ -76,8 +77,6 @@ Two `gulp` tasks are used for the discovery process:
 ```sh
 $ gulp find-users && gulp find-blocks
 ```
-
-Typically the `find:blocks` task can be decoupled from and run more often than `find:users` as blocks are updated far more often than they are created.
 
 The resulting data can then be published to AWS for use by the microsite via:
 
