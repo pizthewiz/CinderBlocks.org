@@ -9,10 +9,10 @@
       $scope.isSortingByCreationDate = false;
 
       $http({method: 'GET', url: '/data/blocks.json'}).
-        success(function(data, status, headers, config) {
+        success(function (data, status, headers, config) {
           $scope.blocks = data.items;
         }).
-        error(function(data, status, headers, config) {
+        error(function (data, status, headers, config) {
           // TODO - something?
         });
 
@@ -46,7 +46,10 @@
       };
     }]).
 
-    controller('BlockController', ['$scope', '$routeParams', function ($scope, $routeParams) {
+    // controller('BlockController', ['$scope', function ($scope) {
+    // }]).
+
+    controller('AboutController', ['$scope', function ($scope) {
     }]);
 
 })();

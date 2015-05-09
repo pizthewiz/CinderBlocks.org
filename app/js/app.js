@@ -4,17 +4,23 @@
   angular.module('app', ['ngRoute', 'appControllers', 'appDirectives']).
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
-      when('/blocks', {
-        templateUrl: 'partials/blocks.html',
-        controller: 'BlocksController'
-      }).
-      // when('/blocks/:blockID', {
-      //   templateUrl: 'partials/block.html',
-      //   controller: 'BlockController'
-      // }).
-      otherwise({
-        redirectTo: '/blocks'
-      });
+        when('/', {
+          templateUrl: 'partials/blocks.html',
+          controller: 'BlocksController'
+        }).
+        when('/blocks', {
+          redirectTo: '/'
+        }).
+
+        // when('/blocks/:blockID', {
+        //   templateUrl: 'partials/block.html',
+        //   controller: 'BlockController'
+        // }).
+
+        when('/about', {
+          templateUrl: 'partials/about.html',
+          controller: 'AboutController'
+        });
     }]);
 
 })();
