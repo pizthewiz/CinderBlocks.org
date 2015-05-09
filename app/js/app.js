@@ -18,8 +18,7 @@
         // }).
 
         when('/about', {
-          templateUrl: 'partials/about.html',
-          controller: 'AboutController'
+          templateUrl: 'partials/about.html'
         });
     }]);
 

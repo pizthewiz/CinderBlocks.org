@@ -44,12 +44,6 @@
 
         $scope.isSortingByCreationDate = primary.indexOf('created') != -1;
       };
-    }]).
-
-    // controller('BlockController', ['$scope', function ($scope) {
-    // }]).
-
-    controller('AboutController', ['$scope', function ($scope) {
     }]);
 
 })();
