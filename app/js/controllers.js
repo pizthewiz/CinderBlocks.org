@@ -10,7 +10,7 @@
 
       $http({method: 'GET', url: '/data/blocks.json'}).
         success(function(data, status, headers, config) {
-          $scope.blocks = data;
+          $scope.blocks = data.items;
         }).
         error(function(data, status, headers, config) {
           // TODO - something?

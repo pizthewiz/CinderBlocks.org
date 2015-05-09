@@ -284,8 +284,8 @@ function scrape(cb) {
   });
 }
 
-function _uniqueUsersForRepos(data, cb) {
-  var results = data.map(function (fullname) {
+function _uniqueUsersForRepos(items, cb) {
+  var results = items.map(function (fullname) {
     // USER/REPO to USER
     return /([\w-]+)\/.+$/.exec(fullname)[1];
   }).filter(function (elem, idx, array) {
@@ -300,17 +300,22 @@ function _uniqueUsersForRepos(data, cb) {
   cb(null, results);
 }
 
-function _saveUsers(data, cb) {
+function _saveUsers(items, cb) {
   // only overwrite if the list is non-empty
-  if (!data || data.length === 0) {
+  if (!items || items.length === 0) {
     cb(new Error('empty user list'));
     return;
   }
 
+  var data = {
+    items: items,
+    updated_at: (new Date()).toISOString()
+  };
+
   var filepath = path.join(__dirname, 'data/users.json');
   console.log('writing users list to %s', filepath);
   fs.writeFile(filepath, JSON.stringify(data), function (err) {
-    cb(err, data);
+    cb(err, items);
   });
 }
 
@@ -322,49 +327,49 @@ function _readUsers(cb) {
   }
 
   console.log('reading users list from %s', filepath);
-  fs.readFile(filepath, function (err, d) {
+  fs.readFile(filepath, function (err, data) {
     if (err) {
       cb(err);
       return;
     }
 
-    var data = JSON.parse(d);
-    console.log('read %d users', data.length);
+    var items = JSON.parse(data).items;
+    console.log('read %d users', items.length);
 
-    cb(null, data);
+    cb(null, items);
   });
 }
 
-function _addMissingUsers(data, cb) {
+function _addMissingUsers(items, cb) {
   var filepath = path.join(__dirname, 'data/users-missing.json');
   if (!fs.existsSync(filepath)) {
-    cb(null, data);
+    cb(null, items);
     return;
   }
 
   console.log('reading missing users list from %s', filepath);
-  fs.readFile(filepath, function (err, d) {
+  fs.readFile(filepath, function (err, data) {
     if (err) {
       cb(err);
       return;
     }
 
-    var results = data.concat(JSON.parse(d)).filter(function (elem, idx, array) {
+    var results = items.concat(JSON.parse(data).items).filter(function (elem, idx, array) {
       return array.indexOf(elem) === array.lastIndexOf(elem);
     });
-    console.log('adding %d missing users', results.length - data.length);
+    console.log('adding %d missing users', results.length - items.length);
 
     cb(null, results);
   });
 }
 
-function findRepos(data, cb) {
-  if (!data || data.length === 0) {
+function findRepos(items, cb) {
+  if (!items || items.length === 0) {
     cb(new Error('empty user list'));
     return;
   }
 
-  async.concatSeries(data, searchUser, function (err, results) {
+  async.concatSeries(items, searchUser, function (err, results) {
     if (err) {
       cb(err);
       return;
@@ -380,25 +385,30 @@ function findRepos(data, cb) {
   });
 }
 
-function _saveRepos(data, cb) {
+function _saveRepos(items, cb) {
+  var data = {
+    items: items,
+    updated_at: (new Date()).toISOString()
+  };
+
   var filepath = path.join(__dirname, 'data/repos.json');
   console.log('writing repos list to %s', filepath);
   fs.writeFile(filepath, JSON.stringify(data), function (err) {
-    cb(err, data);
+    cb(err, items);
   });
 }
 
 function _readRepos(cb) {
   var filepath = path.join(__dirname, 'data/repos.json');
   console.log('reading repos list from %s', filepath);
-  fs.readFile(filepath, function (err, d) {
+  fs.readFile(filepath, function (err, data) {
     if (err) {
       cb(err);
       return;
     }
 
-    var data = JSON.parse(d);
-    cb(null, data);
+    var items = JSON.parse(data).items;
+    cb(null, items);
   });
 }
 
@@ -410,24 +420,29 @@ function getBlocks(repos, cb) {
   });
 }
 
-function _saveBlocks(data, cb) {
+function _saveBlocks(items, cb) {
+  var data = {
+    items: items,
+    updated_at: (new Date()).toISOString()
+  };
+
   var filepath = path.join(__dirname, 'data/blocks.json');
   console.log('writing blocks list to %s', filepath);
   fs.writeFile(filepath, JSON.stringify(data), function (err) {
-    cb(err, data);
+    cb(err, items);
   });
 }
 
 function _readBlocks(cb) {
   var filepath = path.join(__dirname, 'data/blocks.json');
   console.log('reading blocks list from %s', filepath);
-  fs.readFile(filepath, function (err, d) {
+  fs.readFile(filepath, function (err, data) {
     if (err) {
       cb(err);
       return;
     }
 
-    var data = JSON.parse(d);
-    cb(null, data);
+    var items = JSON.parse(data).items;
+    cb(null, items);
   });
 }
