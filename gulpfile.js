@@ -6,10 +6,10 @@ var gulp = require('gulp');
 var connect = require('gulp-connect');
 var jshint = require('gulp-jshint');
 var del = require('del');
-var usemin = require('gulp-usemin');
+var spa = require('gulp-spa');
 var minifyHTML = require('gulp-minify-html');
-var minifyCSS = require('gulp-minify-css');
 var uglify = require('gulp-uglify');
+var minifyCSS = require('gulp-minify-css');
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
 var awspublish = require('gulp-awspublish');
@@ -33,14 +33,30 @@ gulp.task('lint', function () {
 gulp.task('clean', function (cb) {
   del(['dist/*', '!dist/data'], cb);
 });
-// NB - use gulp-usemin 0.3.8 to avoid https://github.com/zont/gulp-usemin/issues/91
-gulp.task('usemin', function () {
-  gulp.src('./app/**/*.html').
-    pipe(usemin({
-      css: [minifyCSS(), 'concat'],
-      html: [minifyHTML({empty: true, loose: true})],
-      js: [uglify(), 'concat'],
-      jsX: [uglify(), 'concat']
+gulp.task('spa', function () {
+  return gulp.src('./app/**/*.html').
+    pipe(spa.html({
+      assetsDir: 'app/',
+      pipelines: {
+        main: function (files) {
+          return files.pipe(minifyHTML({empty: true, loose: true}));
+        },
+        js_lib: function (files) {
+          return files.
+            pipe(uglify()).
+            pipe(concat('js/lib.js'));
+        },
+        js_app: function (files) {
+          return files.
+            pipe(uglify()).
+            pipe(concat('js/app.js'));
+        },
+        css_lib: function (files) {
+          return files.
+            pipe(minifyCSS()).
+            pipe(concat('css/lib.css'))
+        }
+      }
     })).
     pipe(gulp.dest('dist/'));
 });
@@ -69,7 +85,7 @@ gulp.task('default',
   ['lint', 'connect']
 );
 gulp.task('build',
-  ['lint', 'usemin', 'copy-image-files', 'copy-text-files']
+  ['lint', 'spa', 'copy-image-files', 'copy-text-files']
 );
 gulp.task('publish', ['build'], function (cb) {
   if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
