@@ -31,7 +31,7 @@ $ npm install && bower install
 ```
 
 #### MICROSITE
-The microsite is a pretty basic [Angular.js](https://angularjs.org/) app with the source contained within the `app` folder. Local development is made a bit easier through a series of `gulp` commands. A built-in webserver can be launched running the app source via:
+The microsite is a pretty basic [Angular.js](https://angularjs.org/) (💩) app with the source contained within the `app` folder. Local development is made a bit easier through a series of `gulp` commands. A built-in webserver can be launched running the app source via:
 
 ```sh
 $ gulp connect
