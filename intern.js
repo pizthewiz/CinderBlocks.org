@@ -308,8 +308,8 @@ function _saveUsers(items, cb) {
   }
 
   var data = {
-    items: items,
-    updated_at: (new Date()).toISOString()
+    items: items
+//    updated_at: (new Date()).toISOString()
   };
 
   var filepath = path.join(__dirname, 'data/users.json');
@@ -387,8 +387,8 @@ function findRepos(items, cb) {
 
 function _saveRepos(items, cb) {
   var data = {
-    items: items,
-    updated_at: (new Date()).toISOString()
+    items: items
+//    updated_at: (new Date()).toISOString()
   };
 
   var filepath = path.join(__dirname, 'data/repos.json');
@@ -422,8 +422,8 @@ function getBlocks(repos, cb) {
 
 function _saveBlocks(items, cb) {
   var data = {
-    items: items,
-    updated_at: (new Date()).toISOString()
+    items: items
+//    updated_at: (new Date()).toISOString()
   };
 
   var filepath = path.join(__dirname, 'data/blocks.json');
