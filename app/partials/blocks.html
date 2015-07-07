@@ -16,8 +16,10 @@
   <section>
     <ol id="block-list">
       <li data-ng-repeat="block in blocks | filter:filterFunc | orderBy:predicate">
-        <canvas width="72" height="72" data-image-url="{{::block.image_url}}" badge></canvas>
-        <h3><a href="{{::block.url}}">{{::block.name}}</a></h3>
+        <a href="{{::block.url}}">
+          <canvas width="72" height="72" data-image-url="{{::block.image_url}}" badge></canvas>
+          <h3>{{::block.name}}</h3>
+        </a>
         <p>{{::block.description}}</p>
         <p>
           <img data-ng-src="{{::block.user.avatar_url}}&s=40" alt="@{{::block.user.name}}" width="20" height="20" class="avatar"> <a class="user" href="{{::block.user.url}}" rel="user">{{::block.user.name}}</a> ·
