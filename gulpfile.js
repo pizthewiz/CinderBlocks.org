@@ -54,7 +54,7 @@ gulp.task('spa', function () {
         css_lib: function (files) {
           return files.
             pipe(minifyCSS()).
-            pipe(concat('css/lib.css'))
+            pipe(concat('css/lib.css'));
         }
       }
     })).
