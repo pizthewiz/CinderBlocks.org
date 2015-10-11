@@ -27,7 +27,7 @@ The repository contains two pieces, `app` and `intern.js`. The microsite is cont
 #### SETUP
 [Node.js](http://nodejs.org), it's package manager [npm](https://www.npmjs.com/) and [Bower](http://bower.io) are required for development. Once the repo has been cloned, install the project dependencies:
 ```sh
-$ npm install && bower install
+$ npm install; and bower install
 ```
 
 #### MICROSITE
@@ -40,7 +40,7 @@ $ gulp connect
 Before publishing the microsite, the app HTML, JavaScript and CSS are minified and in some cases concatenated into the *dist* folder, reducing file sizes and the number of remote fetches. Similar to running the app source directly, a `gulp` task can be used to launch the built version:
 
 ```sh
-$ gulp build && gulp connect-dist
+$ gulp build; and gulp connect-dist
 ```
 
 The microsite is hosted via AWS S3 and a few environment variables are used to hold AWS credentials:
@@ -75,7 +75,7 @@ $ export GITHUB_SECRET=SECRET
 Two `gulp` tasks are used for the discovery process:
 
 ```sh
-$ gulp find-users && gulp find-blocks
+$ gulp find-users; and gulp find-blocks
 ```
 
 The resulting data can then be published to AWS for use by the microsite via:
