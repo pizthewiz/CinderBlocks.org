@@ -15,8 +15,8 @@
     "bower_components"
   ],
   "dependencies": {
-    "angular": "~1.4.5",
-    "angular-route": "~1.4.5",
+    "angular": "~1.4.7",
+    "angular-route": "~1.4.7",
     "normalize.css": "~3.0.3"
   }
 }
