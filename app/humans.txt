@@ -8,4 +8,4 @@
 
 /* SITE */
   Standards: HTML5, CSS3, ECMAScript 5
-  Components: AngularJS, normalize.css
+  Components: AngularJS, sanitize.css
