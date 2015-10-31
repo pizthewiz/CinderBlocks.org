@@ -16,11 +16,13 @@ var awspublish = require('gulp-awspublish');
 
 var intern = require('./intern.js');
 
-var publishOptions = {
-  key: process.env.AWS_ACCESS_KEY_ID,
-  secret: process.env.AWS_SECRET_ACCESS_KEY,
-  region: 'us-west-1',
-  bucket: 'cinderblocks.org'
+var awsConfig = {
+  params: {
+    Bucket: 'cinderblocks.org'
+  },
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: 'us-west-1'
 };
 
 // site
@@ -94,7 +96,7 @@ gulp.task('publish', ['build'], function (cb) {
     return;
   }
 
-  var publisher = awspublish.create(publishOptions);
+  var publisher = awspublish.create(awsConfig);
   return gulp.src(['./dist/**', '!dist/data']).
     pipe(awspublish.gzip()).
     pipe(publisher.publish()).
@@ -132,7 +134,7 @@ gulp.task('publish-blocks', function (cb) {
     return;
   }
 
-  var publisher = awspublish.create(publishOptions);
+  var publisher = awspublish.create(awsConfig);
   return gulp.src('./data/blocks.json').
     pipe(rename(function (path) {
       path.dirname += '/data';
