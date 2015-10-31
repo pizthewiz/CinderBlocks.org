@@ -1,27 +1,27 @@
 <div>
   <section>
     <div>Sort:
-      <a href="" data-ng-click="setPredicate('-created')">
+      <a href="" data-ng-class="{selected: predicate[0].indexOf('created') !== -1}" data-ng-click="setPredicate('-created')">
         Created
         <span data-ng-show="predicate[0] === 'created'">↑</span>
         <span data-ng-show="predicate[0] === '-created'">↓</span>
       </a>
-      <a href="" data-ng-click="setPredicate('-commit.date')">
+      <a href="" data-ng-class="{selected: predicate[0].indexOf('commit.date') !== -1}" data-ng-click="setPredicate('-commit.date')">
         Committed
         <span data-ng-show="predicate[0] === 'commit.date'">↑</span>
         <span data-ng-show="predicate[0] === '-commit.date'">↓</span>
       </a>
-      <a href="" data-ng-click="setPredicate('name')">
+      <a href="" data-ng-class="{selected: predicate[0].substring(0, 4).indexOf('name') !== -1}" data-ng-click="setPredicate('name')">
         Name
         <span data-ng-show="predicate[0] === '-name'">↑</span>
         <span data-ng-show="predicate[0] === 'name'">↓</span>
       </a>
-      <a href="" data-ng-click="setPredicate('-star_count', 'name')">
+      <a href="" data-ng-class="{selected: predicate[0].indexOf('star_count') !== -1}" data-ng-click="setPredicate('-star_count', 'name')">
         Stars
         <span data-ng-show="predicate[0] === '-star_count'">↑</span>
         <span data-ng-show="predicate[0] === 'star_count'">↓</span>
       </a>
-      <a href="" data-ng-click="setPredicate('user.name', 'name')">
+      <a href="" data-ng-class="{selected: predicate[0].indexOf('user.name') !== -1}" data-ng-click="setPredicate('user.name', 'name')">
         Author
         <span data-ng-show="predicate[0] === '-user.name'">↑</span>
         <span data-ng-show="predicate[0] === 'user.name'">↓</span>
@@ -29,9 +29,9 @@
     </div>
 
     <div>Filter:
-      <a href="" data-ng-click="setFilter('macosx')">OS X</a>
-      <a href="" data-ng-click="setFilter('ios')">iOS</a>
-      <a href="" data-ng-click="setFilter('msw')">Windows</a>
+      <a href="" data-ng-class="{selected: filter.supports.indexOf('macosx') !== -1}" data-ng-click="setFilter('macosx')">OS X</a>
+      <a href="" data-ng-class="{selected: filter.supports.indexOf('ios') !== -1}" data-ng-click="setFilter('ios')">iOS</a>
+      <a href="" data-ng-class="{selected: filter.supports.indexOf('msw') !== -1}" data-ng-click="setFilter('msw')">Windows</a>
     </div>
   </section>
   <section>
