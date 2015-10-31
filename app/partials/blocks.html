@@ -35,8 +35,16 @@
     </div>
   </section>
   <section>
+    <div>
+      Showing
+      <ng-pluralize count="results.length" when="{
+        '1': '1 Block',
+        'other': '{} Blocks'
+      }">
+      </ng-pluralize>
+    </div>
     <ol id="block-list">
-      <li data-ng-repeat="block in blocks | filter:filterFunc | orderBy:predicate">
+      <li data-ng-repeat="block in blocks | orderBy:predicate | filter:filterFunc as results">
         <a href="{{::block.url}}">
           <canvas width="72" height="72" data-image-url="{{::block.image_url}}" badge></canvas>
           <h3>{{::block.name}}</h3>
