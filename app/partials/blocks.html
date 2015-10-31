@@ -1,12 +1,33 @@
 <div>
   <section>
     <div>Sort:
-      <a href="" data-ng-click="setPredicate('-created')">Created</a>
-      <a href="" data-ng-click="setPredicate('-commit.date')">Committed</a>
-      <a href="" data-ng-click="setPredicate('name')">Name</a>
-      <a href="" data-ng-click="setPredicate('-star_count', 'name')">Stars</a>
-      <a href="" data-ng-click="setPredicate('user.name', 'name')">Author</a>
+      <a href="" data-ng-click="setPredicate('-created')">
+        Created
+        <span data-ng-show="predicate[0] === 'created'">↑</span>
+        <span data-ng-show="predicate[0] === '-created'">↓</span>
+      </a>
+      <a href="" data-ng-click="setPredicate('-commit.date')">
+        Committed
+        <span data-ng-show="predicate[0] === 'commit.date'">↑</span>
+        <span data-ng-show="predicate[0] === '-commit.date'">↓</span>
+      </a>
+      <a href="" data-ng-click="setPredicate('name')">
+        Name
+        <span data-ng-show="predicate[0] === '-name'">↑</span>
+        <span data-ng-show="predicate[0] === 'name'">↓</span>
+      </a>
+      <a href="" data-ng-click="setPredicate('-star_count', 'name')">
+        Stars
+        <span data-ng-show="predicate[0] === '-star_count'">↑</span>
+        <span data-ng-show="predicate[0] === 'star_count'">↓</span>
+      </a>
+      <a href="" data-ng-click="setPredicate('user.name', 'name')">
+        Author
+        <span data-ng-show="predicate[0] === '-user.name'">↑</span>
+        <span data-ng-show="predicate[0] === 'user.name'">↓</span>
+      </a>
     </div>
+
     <div>Filter:
       <a href="" data-ng-click="setFilter('macosx')">OS X</a>
       <a href="" data-ng-click="setFilter('ios')">iOS</a>
