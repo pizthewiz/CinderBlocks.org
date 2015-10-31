@@ -132,7 +132,8 @@ function getBlock(fullName, callback) {
         sample_count: 0,
         supports: [],
         template_count: 0,
-        forks: []
+//        forks: [],
+//        license: data.license ? data.license.key : null
       };
 
       defaultBranch = data.default_branch;
