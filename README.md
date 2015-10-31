@@ -95,9 +95,9 @@ There are a couple of existing projects that catalogue CinderBlocks, though neit
 - Kod3000's [Cinder Blocks](http://dany.pro/jects/ongoing/cinder_display_all_blocks.html)
 
 ### REFERENCES
-- [Cinder Docs: CinderBlock](http://libcinder.org/docs/welcome/CinderBlocks.html)
+- [Cinder Docs: CinderBlock](https://libcinder.org/docs/guides/cinder-blocks/index.html)
 - [RFC: CinderBlocks](https://forum.libcinder.org/topic/rfc-cinderblocks)
-- [Cinder Docs: TinderBox](http://libcinder.org/docs/welcome/TinderBox.html)
+- [Cinder Docs: TinderBox](https://libcinder.org/docs/guides/tinderbox/index.html)
 
 ### GREETZ
 - the [ofxAddons.com](http://ofxaddons.com) crew
