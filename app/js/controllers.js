@@ -13,7 +13,7 @@
           $scope.blocks = data.items;
         }).
         error(function (data, status, headers, config) {
-          // TODO - something?
+          // TODO: 💀
         });
 
       $scope.setFilter = function (os) {
@@ -42,7 +42,7 @@
           $scope.predicate[0] = (matches[1] === undefined ? '-' : '') + matches[2];
         }
 
-        $scope.isSortingByCreationDate = primary.indexOf('created') != -1;
+        $scope.isSortingByCreationDate = primary.indexOf('created') !== -1;
       };
     }]);
 

@@ -44,8 +44,8 @@ function scrapeSearchResultsPageForRepos(page, callback) {
       callback(err);
       return;
     }
-    if (res.statusCode != 200) {
-      if (res.statusCode == 420 || res.statusCode == 429) {
+    if (res.statusCode !== 200) {
+      if (res.statusCode === 420 || res.statusCode === 429) {
         setTimeout(function () { scrapeSearchResultsPageForRepos(page, callback); }, 15 * 1000);
         console.log('search result scrape rate limited, waiting 15 s to retry');
       } else {
@@ -76,7 +76,7 @@ function searchUser(user, callback) {
   }, function (err, data, headers) {
     if (err) {
       // check if rate limited and delay until retry
-      if (err.statusCode == 403 && parseInt(err.headers['x-ratelimit-remaining'], 10) === 0) {
+      if (err.statusCode === 403 && parseInt(err.headers['x-ratelimit-remaining'], 10) === 0) {
         var reset = new Date(err.headers['x-ratelimit-reset'] * 1000);
         // use server Date if available, though it is not super accurate
         var now = err.headers['Date'] ? new Date(err.headers['Date']) : new Date();
@@ -291,7 +291,7 @@ function _uniqueUsersForRepos(items, cb) {
     return /([\w-]+)\/.+$/.exec(fullname)[1];
   }).filter(function (elem, idx, array) {
     // unique users
-    return array.indexOf(elem) == idx;
+    return array.indexOf(elem) === idx;
   }).sort(function (a, b) {
     // alphabetize, case insensitive
     return a.toLowerCase().localeCompare(b.toLowerCase());
