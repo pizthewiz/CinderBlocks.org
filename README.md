@@ -1,6 +1,6 @@
 
 # CinderBlocks.org
-[CinderBlocks.org](http://cinderblocks.org) is micro catalogue of *CinderBlocks*, extensions for the C++ creative-coding library [Cinder](http://libcinder.org). The block directory is kept fresh via a periodic task that queries [GitHub](https://github.com).
+[CinderBlocks.org](http://cinderblocks.org) is micro catalogue of *CinderBlocks*, extensions for the C++ creative-coding library [Cinder](https://libcinder.org). The block directory is kept fresh via a periodic task that queries [GitHub](https://github.com).
 
 There are many things the project does not do, including but certainly not limited to:
 - Forks
@@ -9,7 +9,7 @@ There are many things the project does not do, including but certainly not limit
 **NOTE**: The microsite is *entirely un-styled* at present.
 
 ### BLOCK DISCOVERY
-The block discovery mechanism is imperfect as the [GitHub API](https://developer.github.com/v3/) does not yet allow searching un-scoped code and in turn, a stratagem is used that could fail to find some blocks. Blocks are identified by the presence of the file `cinderblock.xml`, which is what would be required by Cinder's project generation tool [TinderBox](http://libcinder.org/docs/welcome/TinderBox.html).
+The block discovery mechanism is imperfect as the [GitHub API](https://developer.github.com/v3/) does not yet allow searching un-scoped code and in turn, a stratagem is used that could fail to find some blocks. Blocks are identified by the presence of the file `cinderblock.xml`, which is what would be required by Cinder's project generation tool [TinderBox](https://libcinder.org/docs/guides/tinderbox/index.html).
 
 The discovery process occurs in two primary phases: first to find all users with blocks (steps 1-2) and the second, find all blocks for the given users (steps 3-5).
 
